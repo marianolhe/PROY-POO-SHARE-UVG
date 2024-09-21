@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 
 public class Registro extends JDialog{
+	
+	//capos para ingresar lso datos
     private JTextField tfnombre;
     private JTextField tfcorreo;
     private JPasswordField tfcontrasena;
@@ -13,6 +15,8 @@ public class Registro extends JDialog{
     private JButton btncancelar;
     private JPanel panelregistro;
 
+
+	//constructor para configuarar elementos gráficos
     public Registro(JFrame parent){
         super(parent);
         setTitle("Crea una nueva cuenta");
@@ -21,6 +25,8 @@ public class Registro extends JDialog{
         setModal(true);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		
+		// Listener para el botón de registro
 
         btnregistrarse.addActionListener(new ActionListener() {
             @Override
@@ -28,6 +34,8 @@ public class Registro extends JDialog{
                 registerUser();
             }
         });
+		
+		// Listener para el botón de cancelar
         btncancelar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -37,12 +45,15 @@ public class Registro extends JDialog{
 
         setVisible(true);
     }
+	
+	// Método para registrar un nuevo usuario
 
     private void registerUser() {
         String nombre = tfnombre.getText();
         String apellido = tfapellido.getText();
         String correo = tfcorreo.getText();
         String contrasena = tfcontrasena.getText();
+		 // Verifica si algún campo está vacío
 
         if (nombre.isEmpty() || apellido.isEmpty() || correo.isEmpty() || contrasena.isEmpty()) {
             JOptionPane.showMessageDialog(this,
@@ -65,6 +76,8 @@ public class Registro extends JDialog{
 
     }
     public Usuario usuario;
+	
+	 // Método para añadir usuario a la base de datos
     private Usuario addUserToDatabase(String nombre, String apellido, String correo, String contrasena) {
             Usuario usuario = null;
 
@@ -73,6 +86,7 @@ public class Registro extends JDialog{
             final String PASSWORD = "";
 
             try{
+				 // Conexión a la base de datos-- no funciona 
                 Connection conn = DriverManager.getConnection(DB_URL,USERNAME,PASSWORD);
 
 
@@ -84,10 +98,14 @@ public class Registro extends JDialog{
                 preparedStatement.setString(2,apellido);
                 preparedStatement.setString(3,correo);
                 preparedStatement.setString(4,contrasena);
+				
+				// Ejecutar la inserción y comprobar si se añadió un nuevo registro
 
 
                 int addedRows = preparedStatement.executeUpdate();
                 if (addedRows > 0) {
+					
+					// Si se añadió el usuario correctamente, crea una nueva instancia de Usuario
                     usuario = new Usuario();
                     usuario.nombre = nombre;
                     usuario.apellido = apellido;
@@ -107,7 +125,9 @@ public class Registro extends JDialog{
 
             return usuario;
     }
-
+	
+	
+	// Método principal para iniciar la aplicación
     public static void main(String[] args) {
         Registro registro = new Registro(null);
         Usuario usuario = registro.usuario;
