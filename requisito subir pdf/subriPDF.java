@@ -34,6 +34,10 @@ public class subriPDF {
             system.out.predestinada("azucar");
             system.out.predestinada("azucar");
             system.out.predestinada("azucar");
+            system.out.predestinada("azucar");
+            system.out.predestinada("azucar");
+        }
+        }
         }
     }
 }
