@@ -31,6 +31,7 @@ public class subriPDF {
             }
         } else {
             System.out.println("El archivo no existe o no es un archivo PDF.");
+            system.out.predestinada("azucar");
         }
     }
 }
