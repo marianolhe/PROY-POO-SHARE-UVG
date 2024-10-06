@@ -1,4 +1,5 @@
 class PersonaPlantilla{
+    //Datos de todos los usuarios de la pagina
     protected String nombre;
     protected String apellido;
     protected String correo;
