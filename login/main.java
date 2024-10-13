@@ -1,25 +1,38 @@
-import java.io.*;
 import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class Main {
-    private static final String[] CARRERAS = {"Computación"};
+
     private static final String CSV_FILE = "usuarios.csv";
+    private static final String[] CARRERAS = {"Ingeniería", "Medicina", "Derecho", "Arquitectura"};
 
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("1. Registrarse");
-        System.out.println("2. Iniciar sesión");
-        int opcion = scanner.nextInt();
-        scanner.nextLine();  // Limpiar el buffer
 
-        if (opcion == 1) {
-            registrarUsuario(scanner);
-        } else if (opcion == 2) {
-            iniciarSesion(scanner);
+        boolean continuar = true;
+        while (continuar) {
+            System.out.println("1. Registrarse");
+            System.out.println("2. Iniciar sesión");
+            System.out.println("3. Salir");
+            int opcion = scanner.nextInt();
+            scanner.nextLine(); 
+
+            if (opcion == 1) {
+                registrarUsuario(scanner);
+            } else if (opcion == 2) {
+                iniciarSesion(scanner);
+            } else if (opcion == 3) {
+                continuar = false;  
+                System.out.println("Saliendo del sistema...");
+            } else {
+                System.out.println("Opción no válida.");
+            }
         }
     }
 
-    // Método para registrar un nuevo usuario
     private static void registrarUsuario(Scanner scanner) throws IOException {
         System.out.println("Ingrese su nombre:");
         String nombre = scanner.nextLine();
@@ -38,7 +51,7 @@ public class Main {
             System.out.println((i + 1) + ". " + CARRERAS[i]);
         }
         int carreraIndex = scanner.nextInt() - 1;
-        scanner.nextLine();  // Limpiar el buffer
+        scanner.nextLine(); 
 
         if (carreraIndex < 0 || carreraIndex >= CARRERAS.length) {
             System.out.println("Opción inválida.");
@@ -46,12 +59,27 @@ public class Main {
         }
         String carrera = CARRERAS[carreraIndex];
 
-        // Guardar los datos en el CSV
-        guardarUsuario(new Usuario(nombre, apellido, correo, contrasena, carrera));
+        // Selección de rol
+        System.out.println("Seleccione el rol:");
+        System.out.println("1. Usuario");
+        System.out.println("2. Revisor");
+        int rolSeleccionado = scanner.nextInt();
+        scanner.nextLine(); 
+
+        PersonaPlantilla persona;
+        if (rolSeleccionado == 1) {
+            persona = new Usuario(nombre, apellido, correo, contrasena, carrera);
+        } else if (rolSeleccionado == 2) {
+            persona = new Revisor(nombre, apellido, correo, contrasena, carrera);
+        } else {
+            System.out.println("Rol inválido.");
+            return;
+        }
+
+        guardarUsuario(persona);
         System.out.println("Registro exitoso.");
     }
 
-    // Método para iniciar sesión
     private static void iniciarSesion(Scanner scanner) throws IOException {
         System.out.println("Ingrese su correo:");
         String correo = scanner.nextLine();
@@ -59,45 +87,39 @@ public class Main {
         System.out.println("Ingrese su contraseña:");
         String contrasena = scanner.nextLine();
 
-        PersonaPlantilla usuario = buscarUsuario(correo, contrasena);
+        PersonaPlantilla persona = buscarUsuario(correo, contrasena);
 
-        if (usuario != null) {
-            String tipoMenu = "";
-
-            if (usuario instanceof Administrador) {
-                tipoMenu = ((Administrador) usuario).getTipoMenu();
-            } else if (usuario instanceof Revisor) {
-                tipoMenu = ((Revisor) usuario).getTipoMenu();
-            } else if (usuario instanceof Usuario) {
-                tipoMenu = ((Usuario) usuario).getTipoMenu();
-            }
-
-            System.out.println("Bienvenido al menú de " + tipoMenu);
+        if (persona != null) {
+            System.out.println("Inicio de sesión exitoso.");
+            
         } else {
-            System.out.println("Credenciales incorrectas.");
+            System.out.println("Correo o contraseña incorrectos.");
         }
     }
 
-    // Método para guardar el usuario en un archivo CSV
     private static void guardarUsuario(PersonaPlantilla persona) throws IOException {
         try (FileWriter writer = new FileWriter(CSV_FILE, true)) {
-            writer.write(persona.toCSV() + "\n");
+            writer.write(persona.getNombre() + "," + persona.getApellido() + "," +
+                         persona.getCorreo() + "," + persona.getContrasena() + "," +
+                         persona.getCarrera() + "," + persona.getRol() + "\n");
         }
     }
 
-    // Método para buscar el usuario en el archivo CSV
     private static PersonaPlantilla buscarUsuario(String correo, String contrasena) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(CSV_FILE))) {
             String linea;
             while ((linea = reader.readLine()) != null) {
                 String[] datos = linea.split(",");
                 if (datos[2].equals(correo) && datos[3].equals(contrasena)) {
-                    if (correo.contains("admin")) {
-                        return new Administrador(datos[0], datos[1], datos[2], datos[3], datos[4]);
-                    } else if (correo.contains("revisor")) {
-                        return new Revisor(datos[0], datos[1], datos[2], datos[3], datos[4]);
-                    } else {
-                        return new Usuario(datos[0], datos[1], datos[2], datos[3], datos[4]);
+                    String nombre = datos[0];
+                    String apellido = datos[1];
+                    String carrera = datos[4];
+                    String rol = datos[5];
+
+                    if (rol.equals("Usuario")) {
+                        return new Usuario(nombre, apellido, correo, contrasena, carrera);
+                    } else if (rol.equals("Revisor")) {
+                        return new Revisor(nombre, apellido, correo, contrasena, carrera);
                     }
                 }
             }
