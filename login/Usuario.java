@@ -1,10 +1,11 @@
-public class Usuario extends PersonaPlantilla {
-    public Usuario(String nombre, String apellido, String correo, String contrasena, String carrera) {
+public class Revisor extends PersonaPlantilla {
+
+    public Revisor(String nombre, String apellido, String correo, String contrasena, String carrera) {
         super(nombre, apellido, correo, contrasena, carrera);
     }
 
-    // Método que representa el menú de Usuario
-    public String getTipoMenu() {
-        return "Usuario";
+    @Override
+    public String getRol() {
+        return "Revisor";
     }
 }
