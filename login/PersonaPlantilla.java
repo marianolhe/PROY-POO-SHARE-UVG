@@ -55,9 +55,8 @@ class PersonaPlantilla{
         this.carrera = carrera;
     }
 
-    // Método para convertir los datos a una línea de CSV
-    public String toCSV() {
-        return nombre + "," + apellido + "," + correo + "," + contrasena + "," + carrera;
+    public String getRol() {
+        return "Persona";
     }
 
 }

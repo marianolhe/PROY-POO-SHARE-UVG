@@ -7,7 +7,7 @@ import java.io.IOException;
 public class Main {
 
     private static final String CSV_FILE = "usuarios.csv";
-    private static final String[] CARRERAS = {"Ingeniería", "Medicina", "Derecho", "Arquitectura"};
+    private static final String[] CARRERAS = {"Computación"};
 
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
