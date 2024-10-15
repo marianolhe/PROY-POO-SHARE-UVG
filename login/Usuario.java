@@ -8,4 +8,10 @@ public class Usuario extends PersonaPlantilla {
     public String getRol() {
         return "Usuario";
     }
+
+    public void subirDocumento() {
+        System.out.println("Documento subido correctamente.");
+    }
 }
+
+
