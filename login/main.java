@@ -34,55 +34,52 @@ public class main {
         scanner.close();
     }
 
-   // private static void mostrar
+    private static void registrarUsuario(Scanner scanner) throws IOException {
+        System.out.println("Ingrese su nombre:");
+        String nombre = scanner.nextLine();
 
-   private static void registrarUsuario(Scanner scanner) throws IOException {
-    System.out.println("Ingrese su nombre:");
-    String nombre = scanner.nextLine();
+        System.out.println("Ingrese su apellido:");
+        String apellido = scanner.nextLine();
 
-    System.out.println("Ingrese su apellido:");
-    String apellido = scanner.nextLine();
+        System.out.println("Ingrese su correo:");
+        String correo = scanner.nextLine();
 
-    System.out.println("Ingrese su correo:");
-    String correo = scanner.nextLine();
+        System.out.println("Ingrese su contraseña:");
+        String contrasena = scanner.nextLine();
 
-    System.out.println("Ingrese su contraseña:");
-    String contrasena = scanner.nextLine();
+        System.out.println("Elija su carrera:");
+        for (int i = 0; i < CARRERAS.length; i++) {
+            System.out.println((i + 1) + ". " + CARRERAS[i]);
+        }
+        int carreraIndex = scanner.nextInt() - 1;
+        scanner.nextLine(); // Limpiar el buffer
 
-    System.out.println("Elija su carrera:");
-    for (int i = 0; i < CARRERAS.length; i++) {
-        System.out.println((i + 1) + ". " + CARRERAS[i]);
+        if (carreraIndex < 0 || carreraIndex >= CARRERAS.length) {
+            System.out.println("Opción inválida.");
+            return;
+        }
+        String carrera = CARRERAS[carreraIndex];
+
+        // Selección de rol
+        System.out.println("Seleccione el rol:");
+        System.out.println("1. Usuario");
+        System.out.println("2. Revisor");
+        int rolSeleccionado = scanner.nextInt();
+        scanner.nextLine(); // Limpiar el buffer
+
+        PersonaPlantilla persona; // Declaración
+        if (rolSeleccionado == 1) {
+            persona = new Usuario(nombre, apellido, correo, contrasena, carrera);
+        } else if (rolSeleccionado == 2) {
+            persona = new Revisor(nombre, apellido, correo, contrasena, carrera);
+        } else {
+            System.out.println("Rol inválido.");
+            return; // Asegúrate de salir aquí si el rol no es válido
+        }
+
+        guardarUsuario(persona); // Método para guardar el usuario
+        System.out.println("Registro exitoso.");
     }
-    int carreraIndex = scanner.nextInt() - 1;
-    scanner.nextLine(); // Limpiar el buffer
-
-    if (carreraIndex < 0 || carreraIndex >= CARRERAS.length) {
-        System.out.println("Opción inválida.");
-        return;
-    }
-    String carrera = CARRERAS[carreraIndex];
-
-    // Selección de rol
-    System.out.println("Seleccione el rol:");
-    System.out.println("1. Usuario");
-    System.out.println("2. Revisor");
-    int rolSeleccionado = scanner.nextInt();
-    scanner.nextLine(); // Limpiar el buffer
-
-    PersonaPlantilla persona; // Declaración
-    if (rolSeleccionado == 1) {
-        persona = new Usuario(nombre, apellido, correo, contrasena, carrera);
-    } else if (rolSeleccionado == 2) {
-        persona = new Revisor(nombre, apellido, correo, contrasena, carrera);
-    } else {
-        System.out.println("Rol inválido.");
-        return; // Asegúrate de salir aquí si el rol no es válido
-    }
-
-    guardarUsuario(persona); // Método para guardar el usuario
-    System.out.println("Registro exitoso.");
-}
-
 
     private static void iniciarSesion(Scanner scanner) throws IOException {
         System.out.println("Ingrese su correo:");
@@ -95,9 +92,28 @@ public class main {
 
         if (persona != null) {
             System.out.println("Inicio de sesión exitoso.");
-            
+            mostrarMenuPorRol(persona); // Mostrar menú según el rol
         } else {
             System.out.println("Correo o contraseña incorrectos.");
+        }
+    }
+
+    private static void mostrarMenuPorRol(PersonaPlantilla persona) {
+        switch (persona.getRol()) {
+            case "Usuario":
+                System.out.println("Menú Usuario:");
+                // Agrega las opciones del menú para el usuario
+                break;
+            case "Revisor":
+                System.out.println("Menú Revisor:");
+                // Agrega las opciones del menú para el revisor
+                break;
+            case "Administrador":
+                System.out.println("Menú Administrador:");
+                // Agrega las opciones del menú para el administrador
+                break;
+            default:
+                System.out.println("Rol no válido.");
         }
     }
 
@@ -109,23 +125,6 @@ public class main {
         }
     }
 
-    private static void manejarRol(PersonaPlantilla persona) { 
-        switch (persona.getRol()) {
-            case "Usuario":
-                ((Usuario) persona).subirDocumento(); // Simulación de subir un documento
-                break;
-            case "Revisor":
-                ((Revisor) persona).aprobarDocumento(); // Simulación de aprobar un documento
-                break;
-            case "Administrador":
-                ((Administrador) persona).gestionarBecas(); // Simulación de gestión de becas
-                break;
-            default: 
-                System.out.println("Rol no válido.");
-        }
-    }
-    
-
     private static PersonaPlantilla buscarUsuario(String correo, String contrasena) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(CSV_FILE))) {
             String linea;
@@ -136,7 +135,7 @@ public class main {
                     String apellido = datos[1];
                     String carrera = datos[4];
                     String rol = datos[5];
-    
+
                     // Verificación del rol y creación de la instancia adecuada
                     if (rol.equals("Usuario")) {
                         return new Usuario(nombre, apellido, correo, contrasena, carrera);
@@ -149,7 +148,5 @@ public class main {
             }
         }
         return null; // Si no se encuentra el usuario
-    }
-    
     }
 }
