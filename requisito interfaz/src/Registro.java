@@ -75,11 +75,11 @@ public class Registro extends JDialog{
         }
 
     }
-    public Usuario usuario;
+    public Usuarionotused usuario;
 	
 	 // Método para añadir usuario a la base de datos
-    private Usuario addUserToDatabase(String nombre, String apellido, String correo, String contrasena) {
-            Usuario usuario = null;
+    private Usuarionotused addUserToDatabase(String nombre, String apellido, String correo, String contrasena) {
+            Usuarionotused usuario = null;
 
             final String DB_URL = "jdbc:mysql://localhost:3306/proyectopooo";
             final String USERNAME = "root";
@@ -106,7 +106,7 @@ public class Registro extends JDialog{
                 if (addedRows > 0) {
 					
 					// Si se añadió el usuario correctamente, crea una nueva instancia de Usuario
-                    usuario = new Usuario();
+                    usuario = new Usuarionotused();
                     usuario.nombre = nombre;
                     usuario.apellido = apellido;
                     usuario.correo = correo;
@@ -130,7 +130,7 @@ public class Registro extends JDialog{
 	// Método principal para iniciar la aplicación
     public static void main(String[] args) {
         Registro registro = new Registro(null);
-        Usuario usuario = registro.usuario;
+        Usuarionotused usuario = registro.usuario;
         if (usuario != null) {
             System.out.println("registro exitoso" + usuario.nombre);
         }

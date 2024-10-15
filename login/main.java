@@ -1,10 +1,10 @@
-import java.util.Scanner;
+import java.util.Scanner; 
 import java.io.FileWriter;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class main {
+public class Main { 
 
     private static final String CSV_FILE = "usuarios.csv";
     private static final String[] CARRERAS = {"Computación"};
@@ -34,55 +34,52 @@ public class main {
         scanner.close();
     }
 
-   // private static void mostrar
+    private static void registrarUsuario(Scanner scanner) throws IOException {
+        System.out.println("Ingrese su nombre:");
+        String nombre = scanner.nextLine();
 
-   private static void registrarUsuario(Scanner scanner) throws IOException {
-    System.out.println("Ingrese su nombre:");
-    String nombre = scanner.nextLine();
+        System.out.println("Ingrese su apellido:");
+        String apellido = scanner.nextLine();
 
-    System.out.println("Ingrese su apellido:");
-    String apellido = scanner.nextLine();
+        System.out.println("Ingrese su correo:");
+        String correo = scanner.nextLine();
 
-    System.out.println("Ingrese su correo:");
-    String correo = scanner.nextLine();
+        System.out.println("Ingrese su contraseña:");
+        String contrasena = scanner.nextLine();
 
-    System.out.println("Ingrese su contraseña:");
-    String contrasena = scanner.nextLine();
+        System.out.println("Elija su carrera:");
+        for (int i = 0; i < CARRERAS.length; i++) {
+            System.out.println((i + 1) + ". " + CARRERAS[i]);
+        }
+        int carreraIndex = scanner.nextInt() - 1;
+        scanner.nextLine(); // Limpiar el buffer
 
-    System.out.println("Elija su carrera:");
-    for (int i = 0; i < CARRERAS.length; i++) {
-        System.out.println((i + 1) + ". " + CARRERAS[i]);
+        if (carreraIndex < 0 || carreraIndex >= CARRERAS.length) {
+            System.out.println("Opción inválida.");
+            return;
+        }
+        String carrera = CARRERAS[carreraIndex];
+
+        // Selección de rol
+        System.out.println("Seleccione el rol:");
+        System.out.println("1. Usuario");
+        System.out.println("2. Revisor");
+        int rolSeleccionado = scanner.nextInt();
+        scanner.nextLine(); // Limpiar el buffer
+
+        PersonaPlantilla persona; // Declaración
+        if (rolSeleccionado == 1) {
+            persona = new Usuario(nombre, apellido, correo, contrasena, carrera);
+        } else if (rolSeleccionado == 2) {
+            persona = new Revisor(nombre, apellido, correo, contrasena, carrera);
+        } else {
+            System.out.println("Rol inválido.");
+            return; // Asegúrate de salir aquí si el rol no es válido
+        }
+
+        guardarUsuario(persona); // Método para guardar el usuario
+        System.out.println("Registro exitoso.");
     }
-    int carreraIndex = scanner.nextInt() - 1;
-    scanner.nextLine(); // Limpiar el buffer
-
-    if (carreraIndex < 0 || carreraIndex >= CARRERAS.length) {
-        System.out.println("Opción inválida.");
-        return;
-    }
-    String carrera = CARRERAS[carreraIndex];
-
-    // Selección de rol
-    System.out.println("Seleccione el rol:");
-    System.out.println("1. Usuario");
-    System.out.println("2. Revisor");
-    int rolSeleccionado = scanner.nextInt();
-    scanner.nextLine(); // Limpiar el buffer
-
-    PersonaPlantilla persona; // Declaración
-    if (rolSeleccionado == 1) {
-        persona = new Usuario(nombre, apellido, correo, contrasena, carrera);
-    } else if (rolSeleccionado == 2) {
-        persona = new Revisor(nombre, apellido, correo, contrasena, carrera);
-    } else {
-        System.out.println("Rol inválido.");
-        return; // Asegúrate de salir aquí si el rol no es válido
-    }
-
-    guardarUsuario(persona); // Método para guardar el usuario
-    System.out.println("Registro exitoso.");
-}
-
 
     private static void iniciarSesion(Scanner scanner) throws IOException {
         System.out.println("Ingrese su correo:");
@@ -95,7 +92,7 @@ public class main {
 
         if (persona != null) {
             System.out.println("Inicio de sesión exitoso.");
-            
+            manejarRol(persona); // Maneja el rol del usuario
         } else {
             System.out.println("Correo o contraseña incorrectos.");
         }
@@ -124,7 +121,6 @@ public class main {
                 System.out.println("Rol no válido.");
         }
     }
-    
 
     private static PersonaPlantilla buscarUsuario(String correo, String contrasena) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(CSV_FILE))) {
@@ -149,7 +145,5 @@ public class main {
             }
         }
         return null; // Si no se encuentra el usuario
-    }
-    
     }
 }
