@@ -7,4 +7,9 @@ public class Revisor extends PersonaPlantilla {
     public String getTipoMenu() {
         return "Revisor";
     }
+
+    public void aprobarDocumento() {
+        System.out.println("Documento aprobado.");
+    }
+    
 }
