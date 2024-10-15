@@ -4,7 +4,8 @@ public class Revisor extends PersonaPlantilla {
     }
 
     // Método para obtener el tipo de menú asociado
-    public String getTipoMenu() {
+    @Override
+    public String getRol() {
         return "Revisor";
     }
 
