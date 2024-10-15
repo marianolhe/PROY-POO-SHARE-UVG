@@ -92,9 +92,69 @@ public class Main {
 
         if (persona != null) {
             System.out.println("Inicio de sesión exitoso.");
+<<<<<<< HEAD
             manejarRol(persona); // Maneja el rol del usuario
+=======
+            mostrarMenuPorRol(persona); // Mostrar menú según el rol
+>>>>>>> f95d13426b2a5e9f67b6786031d4cf740b42af23
         } else {
             System.out.println("Correo o contraseña incorrectos.");
+        }
+    }
+
+    private static void mostrarMenuPorRol(PersonaPlantilla persona) {
+        switch (persona.getRol()) {
+            case "Usuario":
+                System.out.println("Menú Usuario:");
+                boolean cusario = true;
+                while (cusario) {
+                    System.out.println("1. Registrarse");
+                    System.out.println("2. Iniciar sesión");
+                    System.out.println("3. Salir");
+                    int opcionU = scanner.nextInt();
+                    scanner.nextLine(); 
+
+                    if (opcionU == 1) {
+                        registrarUsuario(scanner);
+                    } else if (opcionU == 2) {
+                        iniciarSesion(scanner);
+                    } else if (opcionU == 3) {
+                        cusario = false;  
+                        System.out.println("Saliendo del sistema...");
+                    } else {
+                        System.out.println("Opción no válida.");
+                    }
+                }
+                break;
+            case "Revisor":
+                System.out.println("Menú Revisor:");
+                System.out.println("Menú Usuario:");
+                boolean continuar = true;
+                while (continuar) {
+                    System.out.println("1. Registrarse");
+                    System.out.println("2. Iniciar sesión");
+                    System.out.println("3. Salir");
+                    int opcion = scanner.nextInt();
+                    scanner.nextLine(); 
+
+                    if (opcion == 1) {
+                        registrarUsuario(scanner);
+                    } else if (opcion == 2) {
+                        iniciarSesion(scanner);
+                    } else if (opcion == 3) {
+                        continuar = false;  
+                        System.out.println("Saliendo del sistema...");
+                    } else {
+                        System.out.println("Opción no válida.");
+                    }
+                }
+                break;
+            case "Administrador":
+                System.out.println("Menú Administrador:");
+                // Agrega las opciones del menú para el administrador
+                break;
+            default:
+                System.out.println("Rol no válido.");
         }
     }
 
@@ -106,6 +166,7 @@ public class Main {
         }
     }
 
+<<<<<<< HEAD
     private static void manejarRol(PersonaPlantilla persona) { 
         switch (persona.getRol()) {
             case "Usuario":
@@ -122,6 +183,8 @@ public class Main {
         }
     }
 
+=======
+>>>>>>> f95d13426b2a5e9f67b6786031d4cf740b42af23
     private static PersonaPlantilla buscarUsuario(String correo, String contrasena) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(CSV_FILE))) {
             String linea;
@@ -132,7 +195,7 @@ public class Main {
                     String apellido = datos[1];
                     String carrera = datos[4];
                     String rol = datos[5];
-    
+
                     // Verificación del rol y creación de la instancia adecuada
                     if (rol.equals("Usuario")) {
                         return new Usuario(nombre, apellido, correo, contrasena, carrera);

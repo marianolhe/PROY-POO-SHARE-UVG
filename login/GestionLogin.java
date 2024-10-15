@@ -2,6 +2,7 @@
 
 public class GestionLogin {
     // Métodos para el menú de usuario
+    
     public void mostrarMenuUsuario() {
         System.out.println("Menú de usuario:");
         System.out.println("1. Ver información personal");
