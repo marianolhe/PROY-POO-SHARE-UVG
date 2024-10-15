@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+
 public class main { 
 
     private static final String CSV_FILE = "usuarios.csv";
@@ -13,6 +14,8 @@ public class main {
         Scanner scanner = new Scanner(System.in);
 
         boolean continuar = true;
+        GestionLogin gestion = new GestionLogin();
+
         while (continuar) {
             System.out.println("1. Registrarse");
             System.out.println("2. Iniciar sesión");
@@ -92,7 +95,7 @@ public class main {
 
         if (persona != null) {
             System.out.println("Inicio de sesión exitoso.");
-            manejarRol(persona); // Maneja el rol del usuario
+            mostrarMenuPorRol(persona); // Maneja el rol del usuario
         } else {
             System.out.println("Correo o contraseña incorrectos.");
         }
@@ -106,21 +109,6 @@ public class main {
         }
     }
 
-    private static void manejarRol(PersonaPlantilla persona) { 
-        switch (persona.getRol()) {
-            case "Usuario":
-                ((Usuario) persona).subirDocumento(); // Simulación de subir un documento
-                break;
-            case "Revisor":
-                ((Revisor) persona).aprobarDocumento(); // Simulación de aprobar un documento
-                break;
-            case "Administrador":
-                ((Administrador) persona).gestionarBecas(); // Simulación de gestión de becas
-                break;
-            default: 
-                System.out.println("Rol no válido.");
-        }
-    }
 
     private static PersonaPlantilla buscarUsuario(String correo, String contrasena) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(CSV_FILE))) {
@@ -146,4 +134,6 @@ public class main {
         }
         return null; // Si no se encuentra el usuario
     }
+
+    
 }
