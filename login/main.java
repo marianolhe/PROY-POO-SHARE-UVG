@@ -102,11 +102,48 @@ public class main {
         switch (persona.getRol()) {
             case "Usuario":
                 System.out.println("Menú Usuario:");
-                // Agrega las opciones del menú para el usuario
+                boolean cusario = true;
+                while (cusario) {
+                    System.out.println("1. Registrarse");
+                    System.out.println("2. Iniciar sesión");
+                    System.out.println("3. Salir");
+                    int opcionU = scanner.nextInt();
+                    scanner.nextLine(); 
+
+                    if (opcionU == 1) {
+                        registrarUsuario(scanner);
+                    } else if (opcionU == 2) {
+                        iniciarSesion(scanner);
+                    } else if (opcionU == 3) {
+                        cusario = false;  
+                        System.out.println("Saliendo del sistema...");
+                    } else {
+                        System.out.println("Opción no válida.");
+                    }
+                }
                 break;
             case "Revisor":
                 System.out.println("Menú Revisor:");
-                // Agrega las opciones del menú para el revisor
+                System.out.println("Menú Usuario:");
+                boolean continuar = true;
+                while (continuar) {
+                    System.out.println("1. Registrarse");
+                    System.out.println("2. Iniciar sesión");
+                    System.out.println("3. Salir");
+                    int opcion = scanner.nextInt();
+                    scanner.nextLine(); 
+
+                    if (opcion == 1) {
+                        registrarUsuario(scanner);
+                    } else if (opcion == 2) {
+                        iniciarSesion(scanner);
+                    } else if (opcion == 3) {
+                        continuar = false;  
+                        System.out.println("Saliendo del sistema...");
+                    } else {
+                        System.out.println("Opción no válida.");
+                    }
+                }
                 break;
             case "Administrador":
                 System.out.println("Menú Administrador:");
