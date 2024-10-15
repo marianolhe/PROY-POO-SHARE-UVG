@@ -31,7 +31,10 @@ public class main {
                 System.out.println("Opción no válida.");
             }
         }
+        scanner.close();
     }
+
+   // private static void mostrar
 
     private static void registrarUsuario(Scanner scanner) throws IOException {
         System.out.println("Ingrese su nombre:");
@@ -102,6 +105,20 @@ public class main {
             writer.write(persona.getNombre() + "," + persona.getApellido() + "," +
                          persona.getCorreo() + "," + persona.getContrasena() + "," +
                          persona.getCarrera() + "," + persona.getRol() + "\n");
+        }
+    }
+
+    private static void manejarRol(PersonaPlantilla persona) {
+        switch (persona.getRol()) {
+            case "Usuario":
+                ((Usuario) persona).subirDocumento(); // Simulación de subir un documento
+                break;
+            case "Revisor":
+                ((Revisor) persona).aprobarDocumento(); // Simulación de aprobar un documento
+                break;
+            case "Administrador":
+                ((Administrador) persona).gestionarBecas(); // Simulación de gestión de becas
+                break;
         }
     }
 

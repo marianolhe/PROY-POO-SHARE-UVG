@@ -7,4 +7,9 @@ public class Administrador extends PersonaPlantilla {
     public String getTipoMenu() {
         return "Administrador";
     }
+
+    public void gestionarBecas() {
+        System.out.println("Gestión de becas realizada.");
+    }
+
 }
