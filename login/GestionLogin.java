@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class GestionLogin {
     private static Scanner scanner = new Scanner(System.in);
 
-private static void mostrarMenuPorRol(PersonaPlantilla persona) {
+public static void mostrarMenuPorRol(PersonaPlantilla persona) {
     switch (persona.getRol()) {
         case "Usuario":
             System.out.println("Menú Usuario:");

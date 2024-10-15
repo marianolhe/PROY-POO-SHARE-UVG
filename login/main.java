@@ -95,7 +95,7 @@ public class main {
 
         if (persona != null) {
             System.out.println("Inicio de sesión exitoso.");
-            mostrarMenuPorRol(persona); // Maneja el rol del usuario
+            GestionLogin.mostrarMenuPorRol(persona); // Maneja el rol del usuario
         } else {
             System.out.println("Correo o contraseña incorrectos.");
         }
