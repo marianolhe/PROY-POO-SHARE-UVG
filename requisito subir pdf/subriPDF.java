@@ -30,11 +30,10 @@ public class subriPDF {
                 System.out.println("Error al subir el archivo: " + e.getMessage());
             }
         } else {
-            System.out.println("El archivo no existe o no es un archivo PDF.");
+            System.out.println("Hola");
 
       
         }
         }
-        }
+        
     }
-}
