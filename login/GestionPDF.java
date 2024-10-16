@@ -2,7 +2,7 @@ import java.io.*;
 import java.nio.file.*;
 
 public class GestionPDF {
-    // Carpeta base dentro del repositorio donde se guardarán los archivos PDF organizados
+    // Carpeta base donde se guardarán los archivos PDF organizados
     private String carpetaBase;
 
     public GestionPDF(String carpetaBase) {
@@ -29,7 +29,7 @@ public class GestionPDF {
 
                 System.out.println("Archivo subido correctamente a la carpeta: " + rutaDestino.toString());
 
-                // Guardar los datos en el archivo CSV dentro de la carpeta "Datos CSV"
+                // Guardar los datos en el archivo CSV dentro de la carpeta "Datos CSV" en el directorio raíz
                 guardarDatosCSV(archivo.getName(), rutaArchivo, codigoCurso, carreraAbreviada, "No revisado");
 
             } catch (IOException e) {
@@ -40,10 +40,10 @@ public class GestionPDF {
         }
     }
 
-    // Método para guardar los datos en un archivo CSV con títulos de columna
+    // Método para guardar los datos en un archivo CSV con títulos de columna en la carpeta "Datos CSV"
     private void guardarDatosCSV(String nombreArchivo, String rutaArchivo, String codigoCurso, String carreraAbreviada, String estado) {
-        // Definir la carpeta dentro del repositorio donde se guardará el CSV
-        String carpetaCSV = "/Datos CSV";
+        // Definir la carpeta "Datos CSV" en la raíz del repositorio
+        String carpetaCSV = "Datos CSV";  // Ruta relativa dentro del repositorio
         Path rutaCSV = Paths.get(carpetaCSV);
 
         // Crear la carpeta "Datos CSV" si no existe

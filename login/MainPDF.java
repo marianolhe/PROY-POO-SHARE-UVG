@@ -2,8 +2,8 @@ import java.util.Scanner;
 
 public class MainPDF {
     public static void main(String[] args) {
-        // Carpeta base dentro del repositorio donde se guardarán los archivos PDF
-        String carpetaBase = "APUNTES";
+        // Carpeta base donde se guardarán los archivos PDF (dentro del repositorio)
+        String carpetaBase = "APUNTES";  // Ruta relativa dentro del repositorio
 
         // Crear una instancia de GestionPDF
         GestionPDF gestionPDF = new GestionPDF(carpetaBase);
