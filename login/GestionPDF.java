@@ -2,7 +2,7 @@ import java.io.*;
 import java.nio.file.*;
 
 public class GestionPDF {
-    // Carpeta base donde se guardarán los archivos PDF organizados
+    // Carpeta base dentro del repositorio donde se guardarán los archivos PDF organizados
     private String carpetaBase;
 
     public GestionPDF(String carpetaBase) {
@@ -19,7 +19,7 @@ public class GestionPDF {
                 // Crear la ruta de destino con el formato: CarreraAbreviada-CodigoCurso
                 String nombreCarpeta = carreraAbreviada + "-" + codigoCurso;
                 Path rutaDestino = Paths.get(carpetaBase, nombreCarpeta);
-                
+
                 // Crear las carpetas si no existen
                 Files.createDirectories(rutaDestino);
 
@@ -42,10 +42,10 @@ public class GestionPDF {
 
     // Método para guardar los datos en un archivo CSV con títulos de columna
     private void guardarDatosCSV(String nombreArchivo, String rutaArchivo, String codigoCurso, String carreraAbreviada, String estado) {
-        // Definir la carpeta donde se guardará el CSV
-        String carpetaCSV = "C:\\Users\\bianc\\OneDrive\\Documentos\\GitHub\\PROY-POO-SHARE-UVG\\Datos CSV";
+        // Definir la carpeta dentro del repositorio donde se guardará el CSV
+        String carpetaCSV = "/Datos CSV";
         Path rutaCSV = Paths.get(carpetaCSV);
-        
+
         // Crear la carpeta "Datos CSV" si no existe
         try {
             Files.createDirectories(rutaCSV);
@@ -59,7 +59,7 @@ public class GestionPDF {
         try (FileWriter writer = new FileWriter(archivoCSV, true)) {
             // Si el archivo no existe o está vacío, escribir los títulos de las columnas
             if (!archivoCSV.exists() || archivoCSV.length() == 0) {
-                writer.write("Nombre del archivo,Ruta del archivo,Código del curso,Carrera,Estado\n");
+                writer.write("Nombre del archivo,Ruta del archivo,Código del curso,Carrera abreviada,Estado\n");
             }
 
             // Escribir los datos del archivo, incluyendo el estado "No revisado"

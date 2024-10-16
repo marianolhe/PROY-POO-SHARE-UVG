@@ -2,8 +2,8 @@ import java.util.Scanner;
 
 public class MainPDF {
     public static void main(String[] args) {
-        // Carpeta base donde se guardarán los archivos PDF organizados
-        String carpetaBase = "C:\\Users\\bianc\\OneDrive\\Documentos\\GitHub\\PROY-POO-SHARE-UVG\\APUNTES";
+        // Carpeta base dentro del repositorio donde se guardarán los archivos PDF
+        String carpetaBase = "APUNTES";
 
         // Crear una instancia de GestionPDF
         GestionPDF gestionPDF = new GestionPDF(carpetaBase);
@@ -30,4 +30,3 @@ public class MainPDF {
         scanner.close();
     }
 }
-
