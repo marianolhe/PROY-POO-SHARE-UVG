@@ -4,7 +4,7 @@ public class Administrador extends PersonaPlantilla {
     }
 
     // Método para obtener el tipo de menú asociado
-    public String getTipoMenu() {
+    public String getRol() {
         return "Administrador";
     }
 

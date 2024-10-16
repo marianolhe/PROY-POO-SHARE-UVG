@@ -56,8 +56,9 @@ public static void mostrarMenuPorRol(PersonaPlantilla persona) {
             System.out.println("3. Salir");
 
             int opcionAdmin = scanner.nextInt();
-            scanner.nextLine(); // Limpiar el buffer
             boolean continuarA = true;
+            scanner.nextLine(); // Limpiar el buffer
+            
 
             if (opcionAdmin == 1) {
                 System.out.println("Aceptando Revisores");
