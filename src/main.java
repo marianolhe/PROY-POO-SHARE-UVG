@@ -132,7 +132,4 @@ public class Main {
         }
         return null; // Si no se encuentra el usuario
     }
-
-    
-    }
-
+}
