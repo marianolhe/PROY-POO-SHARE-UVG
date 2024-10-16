@@ -1,5 +1,8 @@
 import java.io.*;
 import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class GestionPDF {
     // Carpeta base donde se guardarán los archivos PDF organizados
@@ -68,5 +71,106 @@ public class GestionPDF {
         } catch (IOException e) {
             System.out.println("Error al escribir en el archivo CSV: " + e.getMessage());
         }
+    }
+
+    // Método para listar los archivos en la carpeta de una carrera y curso específico
+    public List<String> listarArchivos(String carreraAbreviada, String codigoCurso) {
+        String nombreCarpeta = carreraAbreviada + "-" + codigoCurso;
+        Path rutaCarpeta = Paths.get(carpetaBase, nombreCarpeta);
+        List<String> archivos = new ArrayList<>();
+
+        if (Files.exists(rutaCarpeta) && Files.isDirectory(rutaCarpeta)) {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(rutaCarpeta, "*.pdf")) {
+                for (Path archivo : stream) {
+                    archivos.add(archivo.getFileName().toString());
+                }
+            } catch (IOException e) {
+                System.out.println("Error al listar archivos: " + e.getMessage());
+            }
+        } else {
+            System.out.println("No se encontró la carpeta: " + rutaCarpeta.toString());
+        }
+
+        return archivos;
+    }
+
+    // Método para aprobar o denegar un archivo PDF y actualizar el CSV
+    public void aprobarOdenegarArchivo(String nombreArchivo, String carreraAbreviada, String codigoCurso, String accion) {
+        File archivoCSV = new File("Datos CSV/Apuntes.csv");
+        List<String> lineasCSV = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(archivoCSV))) {
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                String[] columnas = linea.split(",");
+
+                // Si el nombre del archivo coincide y pertenece al curso y carrera indicados
+                if (columnas[0].equals(nombreArchivo) && columnas[2].equals(codigoCurso) && columnas[3].equals(carreraAbreviada)) {
+                    // Actualizar el estado del archivo
+                    columnas[4] = accion.equalsIgnoreCase("aprobar") ? "Aprobado" : "Denegado";
+                    linea = String.join(",", columnas);
+                }
+
+                lineasCSV.add(linea);
+            }
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo CSV: " + e.getMessage());
+        }
+
+        // Reescribir el archivo CSV con las modificaciones
+        try (FileWriter writer = new FileWriter(archivoCSV, false)) {
+            for (String linea : lineasCSV) {
+                writer.write(linea + "\n");
+            }
+            System.out.println("Estado del archivo actualizado correctamente.");
+        } catch (IOException e) {
+            System.out.println("Error al escribir en el archivo CSV: " + e.getMessage());
+        }
+    }
+
+    // Método para correr un mini menú de prueba
+    public void menu() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Ingrese la carrera abreviada (ejemplo: ICC): ");
+        String carrera = scanner.nextLine();
+
+        System.out.print("Ingrese el código del curso: ");
+        String codigoCurso = scanner.nextLine();
+
+        // Listar los archivos disponibles en la carpeta especificada
+        List<String> archivos = listarArchivos(carrera, codigoCurso);
+        if (archivos.isEmpty()) {
+            System.out.println("No hay archivos para revisar en esta carpeta.");
+            return;
+        }
+
+        System.out.println("Archivos disponibles:");
+        for (int i = 0; i < archivos.size(); i++) {
+            System.out.println((i + 1) + ". " + archivos.get(i));
+        }
+
+        System.out.print("Seleccione el número del archivo que desea revisar: ");
+        int opcion = scanner.nextInt();
+        scanner.nextLine();  // Limpiar el buffer
+
+        if (opcion < 1 || opcion > archivos.size()) {
+            System.out.println("Opción inválida.");
+            return;
+        }
+
+        String archivoSeleccionado = archivos.get(opcion - 1);
+        System.out.println("Ha seleccionado el archivo: " + archivoSeleccionado);
+
+        System.out.print("¿Desea aprobar o denegar el archivo? (aprobar/denegar): ");
+        String accion = scanner.nextLine();
+
+        if (!accion.equalsIgnoreCase("aprobar") && !accion.equalsIgnoreCase("denegar")) {
+            System.out.println("Acción inválida.");
+            return;
+        }
+
+        // Actualizar el estado del archivo en el CSV
+        aprobarOdenegarArchivo(archivoSeleccionado, carrera, codigoCurso, accion);
     }
 }
