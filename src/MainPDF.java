@@ -3,6 +3,7 @@ import java.io.File;
 import java.util.Scanner;
 
 public class MainPDF {
+    @SuppressWarnings("resource")
     public static void main(String[] args) {
         // Carpeta base donde se guardarán los archivos PDF (dentro del repositorio)
         String carpetaBase = "APUNTES";  // Ruta relativa dentro del repositorio
@@ -43,7 +44,6 @@ public class MainPDF {
         // Llamar al método para subir el archivo y crear la estructura de carpetas
         gestionPDF.subirArchivo(rutaArchivo, codigoCurso, carreraAbreviada);
 
-        // Cerrar el Scanner
         scanner.close();
     }
 }

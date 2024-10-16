@@ -6,7 +6,7 @@ public class Main {
     private static final String CSV_FILE = "src/usuarios.csv"; // Asegúrate de que este archivo exista en la ruta correcta
     private static final String[] CARRERAS = {"ICCTI"}; 
 
-    public static void main(String[] args) throws IOException {
+    public static void main (String[] args) throws IOException {
         Scanner entrada = new Scanner(System.in);
         boolean continuar = true;
 
