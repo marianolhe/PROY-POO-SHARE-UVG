@@ -176,7 +176,7 @@ public class GestionPDF {
         // Actualizar el estado del archivo en el CSV
         aprobarOdenegarArchivo(archivoSeleccionado, carrera, codigoCurso, accion);
     
-        scanner.close();  // Cerrar el scanner al final del método
+        scanner.close();  
     }
 }
     

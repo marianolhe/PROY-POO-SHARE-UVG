@@ -1,3 +1,5 @@
+import javax.swing.*;
+import java.io.File;
 import java.util.Scanner;
 
 public class MainPDF {
@@ -11,9 +13,24 @@ public class MainPDF {
         // Crear un objeto Scanner para leer la entrada del usuario
         Scanner scanner = new Scanner(System.in);
 
-        // Pedir al usuario los datos del archivo a subir
-        System.out.print("Ingrese la ruta completa del archivo PDF que desea subir: ");
-        String rutaArchivo = scanner.nextLine();
+        // Usar JFileChooser para seleccionar el archivo PDF
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Seleccione el archivo PDF");
+        
+        // Filtrar solo archivos PDF
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos PDF", "pdf"));
+        
+        int userSelection = fileChooser.showOpenDialog(null);
+        String rutaArchivo = "";
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToOpen = fileChooser.getSelectedFile();
+            rutaArchivo = fileToOpen.getAbsolutePath();
+            System.out.println("Archivo seleccionado: " + rutaArchivo);
+        } else {
+            System.out.println("No se seleccionó ningún archivo.");
+            return; // Salir si no se selecciona un archivo
+        }
 
         // Pedir el código del curso
         System.out.print("Ingrese el código del curso (por ejemplo, CC2005): ");
