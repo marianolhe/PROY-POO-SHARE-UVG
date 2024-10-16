@@ -1,26 +1,47 @@
-﻿Año,Código,Curso
-1,CU174,Ciencias de la Vida
-1,CC2005,Algoritmos y Programación Básica
-1,CU169,Pensamiento Cuantitativo
-1,CU176,Comunicación efectiva
-1,QQ2018,Química General
-1,CC2007,Introducción a la Ingeniería
-1,CU178,Coaching para la excelencia
-1,CC2008,Programación Orientada a Objetos
-1,CU170,Estadística 1
-1,CU171,Ciudadanía global e intercultural
-1,FF2016,Física 1
-1,MM2028,Cálculo 1
-1,MM2002 ,Algebra Lineal 1
-2,CC3054,Org. De Computadoras y Assembler 
-2,FF2017,Física 2
-2,MM2001,Cálculo 2
-2,CU173,Retos Ambientales y sostenibilidad
-2,CC2016,Algoritmos y Estructuras de Datos
-2,CU172,Guatemala en el contexto mundial
-2,FF2018,Física 3
-2,MM2015,Matemática Discreta 1
-2,CC3087,Programación Plataformas Móviles
-2,MM2029,Ecuaciones Diferenciales 1
-2,CU175,Investigación y Pensamiento Científico
-2,CC3086,Programación de Microprocesadores
+﻿Año;Código;Curso
+1;CU174;Ciencias de la Vida
+1;CC2005;Algoritmos y Programación Básica
+1;CU169;Pensamiento Cuantitativo
+1;CU176;Comunicación efectiva
+1;QQ2018;Química General
+1;CC2007;Introducción a la Ingeniería
+1;CC2008;Programación Orientada a Objetos
+1;CU170;Estadística 1
+1;CU171;Ciudadanía global e intercultural
+1;FF2016;Física 1
+1;MM2028;Cálculo 1
+1;MM2002 ;Algebra Lineal 1
+2;CC3054;Org. De Computadoras y Assembler 
+2;FF2017;Física 2
+2;MM2001;Cálculo 2
+2;CU173;Retos Ambientales y sostenibilidad
+2;CC2016;Algoritmos y Estructuras de Datos
+2;CU172;Guatemala en el contexto mundial
+2;FF2018;Física 3
+2;MM2015;Matemática Discreta 1
+2;CC3087;Programación Plataformas Móviles
+2;MM2029;Ecuaciones Diferenciales 1
+2;CU175;Investigación y Pensamiento Científico
+2;CC3086;Programación de Microprocesadores
+3;CC3088;Bases de Datos 1
+3;CC3090;Ingeniería de Software 1
+3;CC3062;Sistemas y Tecnologías Web
+3;CC3059;Interacción Humano Computador
+3;MM3014;Teoría de Probabilidades
+3;CU177;Emprendimiento e Innovación
+3;CC3091;Ingeniería de Software 2
+3;CC2018;Gráficas por computadora
+3;MM2012;Lógica Matemática
+3;CC2019;Teoría de la Computación
+4;CC3085;Inteligencia Artificial
+4;CC3074;Mineria de Datos
+4;CC3089;Bases de Datos 2
+4;CC3071;Diseño de Lenguajes de Programación
+4;CC3064;Sistemas Operativos
+4;CC3041;Análisis y Diseño de Algoritmos
+4;CC3069;Computación Paralela y Distribuida
+4;CC3084;Data Science
+4;CC3092;Deep Learning y Sistemas Inteligentes
+4;CC3067;Redes
+4;CC3032;Construcción de Compiladores
+4;CC2017;Modelación y Simulación
