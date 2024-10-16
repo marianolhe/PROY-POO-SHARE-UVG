@@ -131,46 +131,52 @@ public class GestionPDF {
     // Método para correr un mini menú de prueba
     public void menu() {
         Scanner scanner = new Scanner(System.in);
-
+    
         System.out.print("Ingrese la carrera abreviada (ejemplo: ICC): ");
         String carrera = scanner.nextLine();
-
+    
         System.out.print("Ingrese el código del curso: ");
         String codigoCurso = scanner.nextLine();
-
+    
         // Listar los archivos disponibles en la carpeta especificada
         List<String> archivos = listarArchivos(carrera, codigoCurso);
         if (archivos.isEmpty()) {
             System.out.println("No hay archivos para revisar en esta carpeta.");
+            scanner.close();  // Cerrar el scanner antes de salir
             return;
         }
-
+    
         System.out.println("Archivos disponibles:");
         for (int i = 0; i < archivos.size(); i++) {
             System.out.println((i + 1) + ". " + archivos.get(i));
         }
-
+    
         System.out.print("Seleccione el número del archivo que desea revisar: ");
         int opcion = scanner.nextInt();
         scanner.nextLine();  // Limpiar el buffer
-
+    
         if (opcion < 1 || opcion > archivos.size()) {
             System.out.println("Opción inválida.");
+            scanner.close();  // Cerrar el scanner antes de salir
             return;
         }
-
+    
         String archivoSeleccionado = archivos.get(opcion - 1);
         System.out.println("Ha seleccionado el archivo: " + archivoSeleccionado);
-
+    
         System.out.print("¿Desea aprobar o denegar el archivo? (aprobar/denegar): ");
         String accion = scanner.nextLine();
-
+    
         if (!accion.equalsIgnoreCase("aprobar") && !accion.equalsIgnoreCase("denegar")) {
             System.out.println("Acción inválida.");
+            scanner.close();  // Cerrar el scanner antes de salir
             return;
         }
-
+    
         // Actualizar el estado del archivo en el CSV
         aprobarOdenegarArchivo(archivoSeleccionado, carrera, codigoCurso, accion);
+    
+        scanner.close();  // Cerrar el scanner al final del método
     }
 }
+    
