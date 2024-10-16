@@ -1,30 +1,31 @@
-import java.util.Scanner; 
-import java.io.FileWriter;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.Scanner;
 
+public class Main {
+    // Define el archivo CSV donde se guardarán los usuarios
+    private static final String CSV_FILE = "src/usuarios.csv"; // Asegúrate de que este archivo exista en la ruta correcta
+    private static final String[] CARRERAS = {"ICCTI"}; 
 
-public class Main { 
-
-    private static final String CSV_FILE = "usuarios.csv";
-    private static final String[] CARRERAS = {"Computación"};
-
-    public static void main (String[] args) throws IOException {
-        Scanner scanner = new Scanner(System.in);
-
+    public static void main(String[] args) throws IOException {
+        Scanner entrada = new Scanner(System.in);
         boolean continuar = true;
+
         while (continuar) {
-            System.out.println("1. Registrarse");
-            System.out.println("2. Iniciar sesión");
-            System.out.println("3. Salir");
-            int opcion = scanner.nextInt();
-            scanner.nextLine(); 
+            System.out.println("\n+ =============================================== +");
+            System.out.println("                      MENÚ                       ");
+            System.out.println("+ =============================================== +");
+            System.out.printf("| %-5s | %-40s |\n", "1", "Registrarse");
+            System.out.printf("| %-5s | %-40s |\n", "2", "Iniciar sesión");
+            System.out.printf("| %-5s | %-40s |\n", "3", "Salir");
+            System.out.println("+ =============================================== +");
+
+            int opcion = entrada.nextInt();
+            entrada.nextLine(); 
 
             if (opcion == 1) {
-                registrarUsuario(scanner);
+                registrarUsuario(entrada);
             } else if (opcion == 2) {
-                iniciarSesion(scanner);
+                iniciarSesion(entrada);
             } else if (opcion == 3) {
                 continuar = false;  
                 System.out.println("Saliendo del sistema...");
@@ -32,7 +33,7 @@ public class Main {
                 System.out.println("Opción no válida.");
             }
         }
-        scanner.close();
+        entrada.close();
     }
 
     private static void registrarUsuario(Scanner scanner) throws IOException {
@@ -107,7 +108,6 @@ public class Main {
         }
     }
 
-
     private static PersonaPlantilla buscarUsuario(String correo, String contrasena) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(CSV_FILE))) {
             String linea;
@@ -118,7 +118,7 @@ public class Main {
                     String apellido = datos[1];
                     String carrera = datos[4];
                     String rol = datos[5];
-    
+
                     // Verificación del rol y creación de la instancia adecuada
                     if (rol.equals("Usuario")) {
                         return new Usuario(nombre, apellido, correo, contrasena, carrera);
