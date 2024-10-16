@@ -28,8 +28,7 @@ public class MainPDF {
             rutaArchivo = fileToOpen.getAbsolutePath();
             System.out.println("Archivo seleccionado: " + rutaArchivo);
         } else {
-            System.out.println("No se seleccionó ningún archivo.");
-            return; // Salir si no se selecciona un archivo
+            System.out.println("No se seleccionó ningún archivo.");// Salir si no se selecciona un archivo
         }
 
         // Pedir el código del curso
@@ -43,7 +42,6 @@ public class MainPDF {
         // Llamar al método para subir el archivo y crear la estructura de carpetas
         gestionPDF.subirArchivo(rutaArchivo, codigoCurso, carreraAbreviada);
 
-        // Cerrar el Scanner
         scanner.close();
     }
 }

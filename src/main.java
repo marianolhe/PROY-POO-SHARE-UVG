@@ -12,12 +12,13 @@ public class Main {
 
         while (continuar) {
             System.out.println("\n+ =============================================== +");
-            System.out.println("                      MENÚ                       ");
+            System.out.println("                     MENÚ PRINCIPAL                       ");
             System.out.println("+ =============================================== +");
             System.out.printf("| %-5s | %-40s |\n", "1", "Registrarse");
             System.out.printf("| %-5s | %-40s |\n", "2", "Iniciar sesión");
             System.out.printf("| %-5s | %-40s |\n", "3", "Salir");
             System.out.println("+ =============================================== +");
+            System.out.print("Ingrese el N° de la opción a elegir ^o^ : ");
 
             int opcion = entrada.nextInt();
             entrada.nextLine(); 
