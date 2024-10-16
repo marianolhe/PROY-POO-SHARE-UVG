@@ -18,7 +18,8 @@ public class Main {
             System.out.printf("| %-5s | %-40s |\n", "2", "Iniciar sesión");
             System.out.printf("| %-5s | %-40s |\n", "3", "Salir");
             System.out.println("+ =============================================== +");
-
+            System.out.print("Ingrese el N° de la opción a elegir ^o^ : ");
+            
             int opcion = entrada.nextInt();
             entrada.nextLine(); 
 
@@ -84,10 +85,10 @@ public class Main {
     }
 
     private static void iniciarSesion(Scanner scanner) throws IOException {
-        System.out.println("Ingrese su correo:");
+        System.out.print("Ingrese su correo: ");
         String correo = scanner.nextLine();
 
-        System.out.println("Ingrese su contraseña:");
+        System.out.print("Ingrese su contraseña: ");
         String contrasena = scanner.nextLine();
 
         PersonaPlantilla persona = buscarUsuario(correo, contrasena);
