@@ -14,8 +14,6 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         boolean continuar = true;
-        GestionLogin gestion = new GestionLogin();
-
         while (continuar) {
             System.out.println("1. Registrarse");
             System.out.println("2. Iniciar sesión");
