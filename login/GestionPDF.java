@@ -30,7 +30,7 @@ public class GestionPDF {
                 System.out.println("Archivo subido correctamente a la carpeta: " + rutaDestino.toString());
 
                 // Guardar los datos en el archivo CSV dentro de la carpeta "Datos CSV"
-                guardarDatosCSV(archivo.getName(), rutaArchivo, codigoCurso, carreraAbreviada);
+                guardarDatosCSV(archivo.getName(), rutaArchivo, codigoCurso, carreraAbreviada, "No revisado");
 
             } catch (IOException e) {
                 System.out.println("Error al copiar el archivo: " + e.getMessage());
@@ -41,7 +41,7 @@ public class GestionPDF {
     }
 
     // Método para guardar los datos en un archivo CSV con títulos de columna
-    private void guardarDatosCSV(String nombreArchivo, String rutaArchivo, String codigoCurso, String carreraAbreviada) {
+    private void guardarDatosCSV(String nombreArchivo, String rutaArchivo, String codigoCurso, String carreraAbreviada, String estado) {
         // Definir la carpeta donde se guardará el CSV
         String carpetaCSV = "C:\\Users\\bianc\\OneDrive\\Documentos\\GitHub\\PROY-POO-SHARE-UVG\\Datos CSV";
         Path rutaCSV = Paths.get(carpetaCSV);
@@ -59,11 +59,11 @@ public class GestionPDF {
         try (FileWriter writer = new FileWriter(archivoCSV, true)) {
             // Si el archivo no existe o está vacío, escribir los títulos de las columnas
             if (!archivoCSV.exists() || archivoCSV.length() == 0) {
-                writer.write("Nombre del archivo,Ruta del archivo,Código del curso,Carrera abreviada\n");
+                writer.write("Nombre del archivo,Ruta del archivo,Código del curso,Carrera,Estado\n");
             }
 
-            // Escribir los datos del archivo
-            writer.write(nombreArchivo + "," + rutaArchivo + "," + codigoCurso + "," + carreraAbreviada + "\n");
+            // Escribir los datos del archivo, incluyendo el estado "No revisado"
+            writer.write(nombreArchivo + "," + rutaArchivo + "," + codigoCurso + "," + carreraAbreviada + "," + estado + "\n");
             System.out.println("Datos guardados correctamente en " + archivoCSV.getPath());
         } catch (IOException e) {
             System.out.println("Error al escribir en el archivo CSV: " + e.getMessage());
