@@ -5,7 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
-public class main { 
+public class Main { 
 
     private static final String CSV_FILE = "usuarios.csv";
     private static final String[] CARRERAS = {"Computación"};
