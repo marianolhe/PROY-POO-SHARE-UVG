@@ -10,12 +10,10 @@ public class Main {
     private static final String CSV_FILE = "usuarios.csv";
     private static final String[] CARRERAS = {"Computación"};
 
-    public static void main(String[] args) throws IOException {
+    public static void Main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
 
         boolean continuar = true;
-        GestionLogin gestion = new GestionLogin();
-
         while (continuar) {
             System.out.println("1. Registrarse");
             System.out.println("2. Iniciar sesión");

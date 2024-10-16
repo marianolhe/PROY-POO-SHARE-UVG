@@ -74,6 +74,6 @@ public static void mostrarMenuPorRol(PersonaPlantilla persona) {
         
         default:
             System.out.println("Rol no válido.");
-    }}
-        
+        }
     }
+}
