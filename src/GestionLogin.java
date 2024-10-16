@@ -6,18 +6,14 @@ public class GestionLogin {
 public static void mostrarMenuPorRol(PersonaPlantilla persona) {
     switch (persona.getRol()) {
         case "Usuario":
-            System.out.println("\n+ =============================================== +");
-            System.out.println("                      MENÚ USUARIO               ");
-            System.out.println("+ =============================================== +");
-            System.out.printf("| %-5s | %-40s |\n", "1", "Subir Documento");
-            System.out.printf("| %-5s | %-40s |\n", "2", "Descargar Documento");
-            System.out.printf("| %-5s | %-40s |\n", "3", "Regresar al menú principal");
-            System.out.println("+ =============================================== +");
-            System.out.print("Ingrese el N° de la opción a elegir ^o^: ");
+            System.out.println("Menú Usuario:");
+            System.out.println("1. Subir Documento");
+            System.out.println("2. Descargar Documento");
+            System.out.println("3. Salir");
 
             int opcionUsuario = scanner.nextInt();
             boolean continuarU = true;
-            scanner.nextLine(); 
+            scanner.nextLine(); // Limpiar el buffer
 
             if (opcionUsuario == 1) {
                 System.out.println("Subiendo los documentos");
@@ -25,7 +21,7 @@ public static void mostrarMenuPorRol(PersonaPlantilla persona) {
                 System.out.println("Descargando los documentos");
             } else if (opcionUsuario == 3) {
                 continuarU = false;
-                System.out.println("Regresando  al menú principal...");
+                System.out.println("Saliendo");
             } else {
                 System.out.println("Opción no válida.");
             }
