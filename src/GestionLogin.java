@@ -6,10 +6,14 @@ public class GestionLogin {
     public static void mostrarMenuPorRol(PersonaPlantilla persona) {
         switch (persona.getRol()) {
             case "Usuario":
-                System.out.println("Menú Usuario:");
-                System.out.println("1. Subir Documento");
-                System.out.println("2. Descargar Documento");
-                System.out.println("3. Salir");
+                System.out.println("\n+ =============================================== +");
+                System.out.println("                      MENÚ USUARIO               ");
+                System.out.println("+ =============================================== +");
+                System.out.printf("| %-5s | %-40s |\n", "1", "Subir Documento");
+                System.out.printf("| %-5s | %-40s |\n", "2", "Descargar Documento");
+                System.out.printf("| %-5s | %-40s |\n", "3", "Regresar al menú principal");
+                System.out.println("+ =============================================== +");
+                System.out.print("Ingrese el N° de la opción a elegir ^o^: ");
 
                 int opcionUsuario = scanner.nextInt();
                 boolean continuarU = true;
