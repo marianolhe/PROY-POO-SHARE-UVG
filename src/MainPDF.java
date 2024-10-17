@@ -29,7 +29,6 @@ public class MainPDF {
             System.out.println("Archivo seleccionado: " + rutaArchivo);
         } else {
             System.out.println("No se seleccionó ningún archivo.");
-            return; // Salir si no se selecciona un archivo
         }
 
         // Pedir el código del curso
