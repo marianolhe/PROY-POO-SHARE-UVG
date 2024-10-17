@@ -1,12 +1,15 @@
-import java.io.*;
-import java.nio.file.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-// Esta clase tiene su propio Main y se ejecuta fuera del progrma solo para crear automaticamente las carpetas donde se guardaran lso apuntes. 
 public class CrearCarpetas {
 
     private static final String PREFIJO_CARPETA = "ICCTI-"; // Prefijo predeterminado para todas las carpetas
     private static final String CARPETA_APUNTES = "APUNTES"; // Carpeta base donde se crearán las carpetas
-    private static final String ARCHIVO_CSV = "Datos CSV/Codigo Cursos.csv"; // Ruta del archivo CSV
+    private static final String ARCHIVO_CSV = "archivos_csv/Codigo Cursos.csv"; // Ruta del archivo CSV
 
     public static void main(String[] args) {
         // Leer el archivo CSV y crear las carpetas
@@ -46,6 +49,11 @@ public class CrearCarpetas {
                         // Crear la carpeta
                         Files.createDirectories(rutaCarpeta);
                         System.out.println("Carpeta creada: " + rutaCarpeta.toString());
+
+                        // Crear el archivo .gitkeep dentro de la carpeta
+                        Path gitkeepPath = rutaCarpeta.resolve(".gitkeep");
+                        Files.createFile(gitkeepPath);
+                        System.out.println("Archivo .gitkeep creado en: " + gitkeepPath.toString());
                     }
                 }
             }
