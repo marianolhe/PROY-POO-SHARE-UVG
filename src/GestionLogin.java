@@ -4,76 +4,93 @@ public class GestionLogin {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void mostrarMenuPorRol(PersonaPlantilla persona) {
-        switch (persona.getRol()) {
-            case "Usuario":
-                System.out.println("Menú Usuario:");
-                System.out.println("1. Subir Documento");
-                System.out.println("2. Descargar Documento");
-                System.out.println("3. Salir");
+        boolean continuar = true;
 
-                int opcionUsuario = scanner.nextInt();
-                boolean continuarU = true;
-                scanner.nextLine(); // Limpiar el buffer
+        while (continuar) {
+            switch (persona.getRol()) {
+                case "Usuario":
+                    System.out.println("Menú Usuario:");
+                    System.out.println("1. Subir Documento");
+                    System.out.println("2. Descargar Documento");
+                    System.out.println("3. Salir");
 
-                if (opcionUsuario == 1) {
-                    System.out.println("Subiendo los documentos");
-                } else if (opcionUsuario == 2) {
-                    System.out.println("Descargando los documentos");
-                } else if (opcionUsuario == 3) {
-                    continuarU = false;
-                    System.out.println("Saliendo");
-                } else {
-                    System.out.println("Opción no válida.");
-                }
-                break;
+                    int opcionUsuario = scanner.nextInt();
+                    scanner.nextLine(); // Limpiar el buffer
 
-            case "Revisor":
-                System.out.println("Menú Revisor:");
-                System.out.println("1. Descargar Documentos Pendientes");
-                System.out.println("2. Marcar Documento como Revisado");
-                System.out.println("3. Salir");
+                    switch (opcionUsuario) {
+                        case 1:
+                            System.out.println("Subiendo los documentos");
+                            break;
+                        case 2:
+                            System.out.println("Descargando los documentos");
+                            break;
+                        case 3:
+                            continuar = false;
+                            System.out.println("Saliendo del menú de usuario...");
+                            break;
+                        default:
+                            System.out.println("Opción no válida.");
+                            break;
+                    }
+                    break;
 
-                int opcionRevisor = scanner.nextInt();
-                boolean continuarR = true; 
-                scanner.nextLine(); // Limpiar el buffer
+                case "Revisor":
+                    System.out.println("Menú Revisor:");
+                    System.out.println("1. Descargar Documentos Pendientes");
+                    System.out.println("2. Marcar Documento como Revisado");
+                    System.out.println("3. Salir");
 
-                if (opcionRevisor == 1) {
-                    System.out.println("Descargando Pendientes");
-                } else if (opcionRevisor == 2) {
-                    System.out.println("Marcando como revisado");
-                } else if (opcionRevisor == 3) {
-                    continuarR = false;
-                    System.out.println("Saliendo");
-                } else {
-                    System.out.println("Opción no válida.");
-                }
-                break;
+                    int opcionRevisor = scanner.nextInt();
+                    scanner.nextLine(); // Limpiar el buffer
 
-            case "Administrador":
-                System.out.println("Menú Administrador:");
-                System.out.println("1. Aceptar Revisor");
-                System.out.println("2. Gestionar Horas de Beca");
-                System.out.println("3. Salir");
+                    switch (opcionRevisor) {
+                        case 1:
+                            System.out.println("Descargando documentos pendientes");
+                            break;
+                        case 2:
+                            System.out.println("Marcando documento como revisado");
+                            break;
+                        case 3:
+                            continuar = false;
+                            System.out.println("Saliendo del menú de revisor...");
+                            break;
+                        default:
+                            System.out.println("Opción no válida.");
+                            break;
+                    }
+                    break;
 
-                int opcionAdmin = scanner.nextInt();
-                boolean continuarA = true;
-                scanner.nextLine(); // Limpiar el buffer
-                
+                case "Administrador":
+                    System.out.println("Menú Administrador:");
+                    System.out.println("1. Aceptar Revisor");
+                    System.out.println("2. Gestionar Horas de Beca");
+                    System.out.println("3. Salir");
 
-                if (opcionAdmin == 1) {
-                    System.out.println("Aceptando Revisores");
-                } else if (opcionAdmin == 2) {
-                    System.out.println("Gestionando Horas");
-                } else if (opcionAdmin == 3) {
-                    continuarA = false;
-                    System.out.println("Saliendo");
-                } else {
-                    System.out.println("Opción no válida.");
-                }
-                break;
-            
-            default:
-                System.out.println("Rol no válido.");
+                    int opcionAdmin = scanner.nextInt();
+                    scanner.nextLine(); // Limpiar el buffer
+
+                    switch (opcionAdmin) {
+                        case 1:
+                            System.out.println("Aceptando revisores");
+                            break;
+                        case 2:
+                            System.out.println("Gestionando horas de beca");
+                            break;
+                        case 3:
+                            continuar = false;
+                            System.out.println("Saliendo del menú de administrador...");
+                            break;
+                        default:
+                            System.out.println("Opción no válida.");
+                            break;
+                    }
+                    break;
+
+                default:
+                    System.out.println("Rol no válido.");
+                    continuar = false;
+                    break;
+            }
         }
     }
 }

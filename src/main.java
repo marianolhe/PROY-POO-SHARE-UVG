@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class Main {
     // Define el archivo CSV donde se guardarán los usuarios
-    private static final String CSV_FILE = "src/usuarios.csv"; // Asegúrate de que este archivo exista en la ruta correcta
+    private static final String CSV_FILE = "../Base/usuarios.csv"; // Ruta a la carpeta 'Base'
     private static final String[] CARRERAS = {"ICCTI"}; 
 
     public static void main (String[] args) throws IOException {
