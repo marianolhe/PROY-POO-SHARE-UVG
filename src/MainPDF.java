@@ -42,6 +42,15 @@ public class MainPDF {
         // Llamar al método para subir el archivo y crear la estructura de carpetas
         gestionPDF.subirArchivo(rutaArchivo, codigoCurso, carreraAbreviada);
 
+        System.out.print("Ingrese la carrera (por ejemplo, ICC): ");
+        String carreraAbreviada = scanner.nextLine();
+
+        System.out.print("Ingrese el código del curso (por ejemplo, CC2005): ");
+        String codigoCurso = scanner.nextLine();
+
+        // Llamar al método para revisar archivo
+        gestionPDF.revisarArchivo(carreraAbreviada, codigoCurso);
+
         scanner.close();
     }
 }

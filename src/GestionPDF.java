@@ -95,8 +95,8 @@ public class GestionPDF {
 
         return archivos;
     }
-
-        public void revisarArchivo(String carreraAbreviada, String codigoCurso) {
+    //Método para revisar archivos
+    public void revisarArchivo(String carreraAbreviada, String codigoCurso) {
         Scanner scanner = new Scanner(System.in);
         List<String> archivos = listarArchivos(carreraAbreviada, codigoCurso);
 
@@ -136,8 +136,9 @@ public class GestionPDF {
         }
 
         actualizarEstadoCSV(archivoSeleccionado, nuevoEstado);
+        scanner.close();
     }
-
+    //Método para actualizar el estado del csv para indicar si fue aprobado o denegado
     private void actualizarEstadoCSV(String nombreArchivo, String nuevoEstado) {
         String carpetaCSV = "Datos CSV";
         File archivoCSV = new File(carpetaCSV, "Apuntes.csv");
@@ -166,7 +167,7 @@ public class GestionPDF {
         } catch (IOException e) {
             System.out.println("Error al escribir en el archivo CSV: " + e.getMessage());
         }
-    }scanner.close();
+    }
 
 }
     
