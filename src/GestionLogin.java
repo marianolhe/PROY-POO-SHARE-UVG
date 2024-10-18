@@ -4,6 +4,9 @@ public class GestionLogin {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void mostrarMenuPorRol(PersonaPlantilla persona) {
+         // Crear una instancia de GestionPDF con la ruta base de APUNTES
+         GestionPDF gestionPDF = new GestionPDF("APUNTES");
+
         switch (persona.getRol()) {
             case "Usuario":
                 System.out.println("\n+ =============================================== +");
@@ -20,7 +23,20 @@ public class GestionLogin {
                 scanner.nextLine(); // Limpiar el buffer
 
                 if (opcionUsuario == 1) {
-                    System.out.println("Subiendo los documentos");
+                    // Solicitar la ruta del archivo al usuario
+                    System.out.print("Ingrese la ruta completa del archivo PDF: ");
+                    String rutaArchivo = scanner.nextLine();
+
+                    // Solicitar el código del curso
+                    System.out.print("Ingrese el código del curso: ");
+                    String codigoCurso = scanner.nextLine();
+
+                    // Obtener el correo del usuario (supongo que está almacenado en el objeto `persona`)
+                    String correoUsuario = persona.getCorreo();
+
+                    // Llamar al método para subir el archivo en la carpeta correcta
+                    gestionPDF.subirArchivo(rutaArchivo, codigoCurso, correoUsuario);
+
                 } else if (opcionUsuario == 2) {
                     System.out.println("Descargando los documentos");
                 } else if (opcionUsuario == 3) {
