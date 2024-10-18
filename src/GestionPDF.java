@@ -6,9 +6,14 @@ import java.util.Scanner;
 
 public class GestionPDF {
     private String carpetaBase;
+    private static final String NOMBRE_ARCHIVO_CSV = "usuarios.csv"; // Nombre del archivo CSV de usuarios
+    private static final String CARPETA_ARCHIVOS_CSV = "archivos_csv"; // Carpeta donde se guardará el CSV de apuntes
+    private static final String NOMBRE_ARCHIVO_APUNTES = "Apuntes.csv"; // Nombre del archivo CSV de apuntes
+    private Scanner scanner; // Scanner como atributo de la clase
 
     public GestionPDF(String carpetaBase) {
         this.carpetaBase = carpetaBase;
+        this.scanner = new Scanner(System.in); // Inicialización del Scanner
     }
 
     public void subirArchivo(String rutaArchivo, String codigoCurso, String correoUsuario, String anio) {
@@ -51,8 +56,7 @@ public class GestionPDF {
 
     // Método para obtener la carrera desde el CSV de usuarios
     private String obtenerCarreraDesdeCSV(String correoUsuario) {
-        String carpetaCSV = "Base";  // Carpeta donde se encuentra el archivo CSV
-        File archivoCSV = new File(carpetaCSV, "usuarios.csv");
+        File archivoCSV = new File(CARPETA_ARCHIVOS_CSV, NOMBRE_ARCHIVO_CSV);
 
         try (BufferedReader reader = new BufferedReader(new FileReader(archivoCSV))) {
             String linea;
@@ -70,9 +74,7 @@ public class GestionPDF {
 
     // Método para guardar los datos en un archivo CSV con títulos de columna en la carpeta "archivos_csv"
     private void guardarDatosCSV(String nombreArchivo, String rutaArchivo, String codigoCurso, String carreraAbreviada, String estado) {
-        // Definir la carpeta "archivos_csv" en la raíz del repositorio
-        String carpetaCSV = "archivos_csv";  // Ruta relativa dentro del repositorio
-        Path rutaCSV = Paths.get(carpetaCSV);
+        Path rutaCSV = Paths.get(CARPETA_ARCHIVOS_CSV);
 
         // Crear la carpeta "archivos_csv" si no existe
         try {
@@ -82,7 +84,7 @@ public class GestionPDF {
         }
 
         // Definir la ruta completa del archivo CSV
-        File archivoCSV = new File(carpetaCSV, "Apuntes.csv");
+        File archivoCSV = new File(CARPETA_ARCHIVOS_CSV, NOMBRE_ARCHIVO_APUNTES);
 
         try (FileWriter writer = new FileWriter(archivoCSV, true)) {
             // Si el archivo no existe o está vacío, escribir los títulos de las columnas
@@ -118,13 +120,14 @@ public class GestionPDF {
 
         return archivos;
     }
-    //Método para revisar archivos
+
+    // Método para revisar archivos
     public void revisarArchivo(String carreraAbreviada, String codigoCurso) {
-        Scanner scanner = new Scanner(System.in);
         List<String> archivos = listarArchivos(carreraAbreviada, codigoCurso);
 
         if (archivos.isEmpty()) {
             System.out.println("No hay archivos para revisar.");
+            return; // Salir del método si no hay archivos
         }
 
         System.out.println("Archivos disponibles para revisar:");
@@ -138,6 +141,7 @@ public class GestionPDF {
 
         if (seleccion < 1 || seleccion > archivos.size()) {
             System.out.println("Selección inválida.");
+            return; // Salir del método si la selección es inválida
         }
 
         String archivoSeleccionado = archivos.get(seleccion - 1);
@@ -153,15 +157,16 @@ public class GestionPDF {
             nuevoEstado = "Rechazado";
         } else {
             System.out.println("Decisión inválida.");
+            return; // Salir del método si la decisión es inválida
         }
 
         actualizarEstadoCSV(archivoSeleccionado, nuevoEstado);
-        scanner.close();
     }
-    //Método para actualizar el estado del csv para indicar si fue aprobado o denegado
+
+    // Método para actualizar el estado del csv para indicar si fue aprobado o denegado
     private void actualizarEstadoCSV(String nombreArchivo, String nuevoEstado) {
-        String carpetaCSV = "archivos_csv";
-        File archivoCSV = new File(carpetaCSV, "Apuntes.csv");
+        String carpetaCSV = CARPETA_ARCHIVOS_CSV;
+        File archivoCSV = new File(carpetaCSV, NOMBRE_ARCHIVO_APUNTES);
         List<String> lineasActualizadas = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(archivoCSV))) {
@@ -189,5 +194,10 @@ public class GestionPDF {
         }
     }
 
+    // Método para cerrar el Scanner al final del uso
+    public void cerrarScanner() {
+        if (scanner != null) {
+            scanner.close();
+        }
+    }
 }
-    

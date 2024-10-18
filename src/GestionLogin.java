@@ -48,7 +48,7 @@ public class GestionLogin {
                             break;
                         case 3:
                             continuar = false;
-                            System.out.println("Saliendo del menú de usuario...");
+                            System.out.println("Cerrando sesión (^-^)/...");
                             break;
                         default:
                             System.out.println("Opción no válida.");
@@ -57,24 +57,24 @@ public class GestionLogin {
                     break;
 
                 case "Revisor":
-                    System.out.println("Menú Revisor:");
-                    System.out.println("1. Descargar Documentos Pendientes");
-                    System.out.println("2. Marcar Documento como Revisado");
-                    System.out.println("3. Salir");
+                    System.out.println("\n+ =============================================== +");
+                    System.out.println("                      MENÚ REVISOR               ");
+                    System.out.println("+ =============================================== +");
+                    System.out.printf("| %-5s | %-40s |\n", "1", "Revisar apuntes");
+                    System.out.printf("| %-5s | %-40s |\n", "2", "Cerrar sesión");
+                    System.out.println("+ =============================================== +");
+                    System.out.print("Ingrese el N° de la opción a elegir ^o^: ");
 
                     int opcionRevisor = scanner.nextInt();
                     scanner.nextLine(); // Limpiar el buffer
 
                     switch (opcionRevisor) {
                         case 1:
-                            System.out.println("Descargando documentos pendientes");
-                            break;
-                        case 2:
                             System.out.println("Marcando documento como revisado");
                             break;
-                        case 3:
+                        case 2:
                             continuar = false;
-                            System.out.println("Saliendo del menú de revisor...");
+                            System.out.println("Cerrando sesión (^-^)/ ...");
                             break;
                         default:
                             System.out.println("Opción no válida.");
@@ -83,10 +83,14 @@ public class GestionLogin {
                     break;
 
                 case "Administrador":
-                    System.out.println("Menú Administrador:");
-                    System.out.println("1. Aceptar Revisor");
-                    System.out.println("2. Gestionar Horas de Beca");
-                    System.out.println("3. Salir");
+                    System.out.println("\n+ =============================================== +");
+                    System.out.println("                  MENÚ ADMINISTRADOR              ");
+                    System.out.println("+ =============================================== +");
+                    System.out.printf("| %-5s | %-40s |\n", "1", "Aceptar Revisor");
+                    System.out.printf("| %-5s | %-40s |\n", "2", "Gestionar Horas de Beca");
+                    System.out.printf("| %-5s | %-40s |\n", "3", "Salir");
+                    System.out.println("+ =============================================== +");
+                    System.out.print("Ingrese el N° de la opción a elegir ^o^: ");
 
                     int opcionAdmin = scanner.nextInt();
                     scanner.nextLine(); // Limpiar el buffer
