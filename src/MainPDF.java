@@ -43,7 +43,5 @@ public class MainPDF {
         // Llamar al método para subir el archivo y crear la estructura de carpetas
         gestionPDF.subirArchivo(rutaArchivo, codigoCurso, carreraAbreviada);
 
-        // Cerrar el Scanner
-        scanner.close();
     }
 }
