@@ -14,7 +14,7 @@ public class GestionLogin {
                     System.out.println("+ =============================================== +");
                     System.out.printf("| %-5s | %-40s |\n", "1", "Subir Documento");
                     System.out.printf("| %-5s | %-40s |\n", "2", "Descargar Documento");
-                    System.out.printf("| %-5s | %-40s |\n", "3", "Regresar al menú principal");
+                    System.out.printf("| %-5s | %-40s |\n", "3", "Cerrar sesión");
                     System.out.println("+ =============================================== +");
                     System.out.print("Ingrese el N° de la opción a elegir ^o^: ");
 
