@@ -18,7 +18,8 @@ public class Main {
             System.out.printf("| %-5s | %-40s |\n", "2", "Iniciar sesión");
             System.out.printf("| %-5s | %-40s |\n", "3", "Salir");
             System.out.println("+ =============================================== +");
-
+            System.out.print("Ingrese el N° de la opción a elegir ^o^ : ");
+            
             int opcion = entrada.nextInt();
             entrada.nextLine(); 
 
