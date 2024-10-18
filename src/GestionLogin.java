@@ -4,9 +4,6 @@ public class GestionLogin {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void mostrarMenuPorRol(PersonaPlantilla persona) {
-        // Crear una instancia de GestionPDF con la ruta base de APUNTES
-        GestionPDF gestionPDF = new GestionPDF("APUNTES");
-
         boolean continuar = true;
 
         while (continuar) {
@@ -26,26 +23,8 @@ public class GestionLogin {
 
                     switch (opcionUsuario) {
                         case 1:
-                        System.out.println("Subiendo los documentos...");
-
-                        // Solicitar la ruta del archivo al usuario
-                        System.out.print("Ingrese la ruta completa del archivo PDF: ");
-                        String rutaArchivo = scanner.nextLine();
-
-                        // Solicitar el código del curso
-                        System.out.print("Ingrese el código del curso: ");
-                        String codigoCurso = scanner.nextLine();
-
-                        // Solicitar el año
-                        System.out.print("Ingrese el año (en números): ");
-                        String anio = scanner.nextLine();
-
-                        // Obtener el correo del usuario desde el objeto `persona`
-                        String correoUsuario = persona.getCorreo();
-
-                        // Llamar al método para subir el archivo, ahora con el formato correcto
-                        gestionPDF.subirArchivo(rutaArchivo, codigoCurso, correoUsuario, anio);
-                        break;
+                            System.out.println("Subiendo los documentos");
+                            break;
                         case 2:
                             System.out.println("Descargando los documentos");
                             break;

@@ -40,7 +40,7 @@ public class MainPDF {
         String carreraAbreviada = scanner.nextLine();
 
         // Llamar al método para subir el archivo y crear la estructura de carpetas
-        gestionPDF.subirArchivo(rutaArchivo, codigoCurso, carreraAbreviada, carreraAbreviada);
+        gestionPDF.subirArchivo(rutaArchivo, codigoCurso, carreraAbreviada);
 
         // Llamar al método para revisar archivo
         gestionPDF.revisarArchivo(carreraAbreviada, codigoCurso);
