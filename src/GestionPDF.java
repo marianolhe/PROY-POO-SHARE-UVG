@@ -4,39 +4,43 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-
-
 public class GestionPDF {
-    // Carpeta base donde se guardarán los archivos PDF organizados
     private String carpetaBase;
 
     public GestionPDF(String carpetaBase) {
         this.carpetaBase = carpetaBase;
     }
 
-    // Método para subir y guardar el archivo en la estructura de carpetas generada
-    public void subirArchivo(String rutaArchivo, String codigoCurso, String carreraAbreviada) {
+    public void subirArchivo(String rutaArchivo, String codigoCurso, String correoUsuario, String anio) {
         File archivo = new File(rutaArchivo);
 
-        // Verificar que el archivo exista y sea un archivo PDF
         if (archivo.exists() && archivo.isFile() && rutaArchivo.endsWith(".pdf")) {
             try {
-                // Crear la ruta de destino con el formato: CarreraAbreviada-CodigoCurso
-                String nombreCarpeta = carreraAbreviada + "-" + codigoCurso;
+                // Obtener la carrera desde el CSV de usuarios
+                String carreraAbreviada = obtenerCarreraDesdeCSV(correoUsuario);
+
+                if (carreraAbreviada == null) {
+                    System.out.println("No se pudo encontrar la carrera asociada a este usuario.");
+                    return;
+                }
+
+                // Concatenar carrera-abreviada, año y código del curso
+                String nombreCarpeta = carreraAbreviada + "-" + anio + "-" + codigoCurso;
                 Path rutaDestino = Paths.get(carpetaBase, nombreCarpeta);
 
-                // Crear las carpetas si no existen
-                Files.createDirectories(rutaDestino);
+                // Verificar si la carpeta existe
+                if (Files.exists(rutaDestino) && Files.isDirectory(rutaDestino)) {
+                    // Guardar el PDF en la carpeta de destino
+                    Path archivoDestino = rutaDestino.resolve(archivo.getName());
+                    Files.copy(archivo.toPath(), archivoDestino);
 
-                // Guardar el PDF en la carpeta de destino
-                Path archivoDestino = rutaDestino.resolve(archivo.getName());
-                Files.copy(archivo.toPath(), archivoDestino);
+                    System.out.println("Archivo subido correctamente a la carpeta: " + rutaDestino.toString());
 
-                System.out.println("Archivo subido correctamente a la carpeta: " + rutaDestino.toString());
-
-                // Guardar los datos en el archivo CSV dentro de la carpeta "Datos CSV" en el directorio raíz
-                guardarDatosCSV(archivo.getName(), rutaArchivo, codigoCurso, carreraAbreviada, "No revisado");
-
+                    // Guardar los datos en el archivo CSV
+                    guardarDatosCSV(archivo.getName(), rutaArchivo, codigoCurso, carreraAbreviada, "No revisado");
+                } else {
+                    System.out.println("ERROR: No existe una carpeta para este curso en el directorio APUNTES.");
+                }
             } catch (IOException e) {
                 System.out.println("Error al copiar el archivo: " + e.getMessage());
             }
@@ -45,13 +49,32 @@ public class GestionPDF {
         }
     }
 
-    // Método para guardar los datos en un archivo CSV con títulos de columna en la carpeta "Datos CSV"
+    // Método para obtener la carrera desde el CSV de usuarios
+    private String obtenerCarreraDesdeCSV(String correoUsuario) {
+        String carpetaCSV = "Base";  // Carpeta donde se encuentra el archivo CSV
+        File archivoCSV = new File(carpetaCSV, "usuarios.csv");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(archivoCSV))) {
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                String[] datos = linea.split(",");
+                if (datos[0].equals(correoUsuario)) { // Asumiendo que el correo es la primera columna
+                    return datos[4]; // La carrera está en la quinta columna (índice 4)
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo CSV: " + e.getMessage());
+        }
+        return null; // Si no se encuentra el correo
+    }
+
+    // Método para guardar los datos en un archivo CSV con títulos de columna en la carpeta "archivos_csv"
     private void guardarDatosCSV(String nombreArchivo, String rutaArchivo, String codigoCurso, String carreraAbreviada, String estado) {
-        // Definir la carpeta "Datos CSV" en la raíz del repositorio
-        String carpetaCSV = "Datos CSV";  // Ruta relativa dentro del repositorio
+        // Definir la carpeta "archivos_csv" en la raíz del repositorio
+        String carpetaCSV = "archivos_csv";  // Ruta relativa dentro del repositorio
         Path rutaCSV = Paths.get(carpetaCSV);
 
-        // Crear la carpeta "Datos CSV" si no existe
+        // Crear la carpeta "archivos_csv" si no existe
         try {
             Files.createDirectories(rutaCSV);
         } catch (IOException e) {
@@ -102,7 +125,6 @@ public class GestionPDF {
 
         if (archivos.isEmpty()) {
             System.out.println("No hay archivos para revisar.");
-            return;
         }
 
         System.out.println("Archivos disponibles para revisar:");
@@ -116,7 +138,6 @@ public class GestionPDF {
 
         if (seleccion < 1 || seleccion > archivos.size()) {
             System.out.println("Selección inválida.");
-            return;
         }
 
         String archivoSeleccionado = archivos.get(seleccion - 1);
@@ -132,7 +153,6 @@ public class GestionPDF {
             nuevoEstado = "Rechazado";
         } else {
             System.out.println("Decisión inválida.");
-            return;
         }
 
         actualizarEstadoCSV(archivoSeleccionado, nuevoEstado);
@@ -140,7 +160,7 @@ public class GestionPDF {
     }
     //Método para actualizar el estado del csv para indicar si fue aprobado o denegado
     private void actualizarEstadoCSV(String nombreArchivo, String nuevoEstado) {
-        String carpetaCSV = "Datos CSV";
+        String carpetaCSV = "archivos_csv";
         File archivoCSV = new File(carpetaCSV, "Apuntes.csv");
         List<String> lineasActualizadas = new ArrayList<>();
 
