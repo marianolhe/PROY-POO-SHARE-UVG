@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Main {
     // Define el archivo CSV donde se guardarán los usuarios
     private static final String CSV_FILE = "Base/usuarios.csv"; // Ruta a la carpeta 'Base'
-    private static final String[] CARRERAS = {"ICCTI"}; 
+    private static final String[] CARRERAS = {"Ingeniería en Ciencias de la Computación y Tecnologías de la Información"}; 
 
     public static void main (String[] args) throws IOException {
         Scanner entrada = new Scanner(System.in);
@@ -29,75 +29,94 @@ public class Main {
                 iniciarSesion(entrada);
             } else if (opcion == 3) {
                 continuar = false;  
-                System.out.println("Saliendo del sistema T_T ...");
+                System.out.println("Saliendo del sistema (^-^)/ ...");
             } else {
-                System.out.println("Opción no válida.");
+                System.out.println("ERROR: Opción no válida (._.) ");
             }
         }
         entrada.close();
     }
 
     private static void registrarUsuario(Scanner scanner) throws IOException {
-        System.out.println("Ingrese su nombre:");
+        System.out.println("Para crear su perfil, necesitamos algunos datos ^_^");
+        
+        System.out.print("Ingrese su nombre: ");
         String nombre = scanner.nextLine();
 
-        System.out.println("Ingrese su apellido:");
+        System.out.print ("Ingrese su apellido: ");
         String apellido = scanner.nextLine();
 
-        System.out.println("Ingrese su correo:");
+        System.out.print("Ingrese su correo electrónico institucional: ");
         String correo = scanner.nextLine();
+ 
+        boolean contrasenaValida = false;
+        String contrasena = "";
 
-        System.out.println("Ingrese su contraseña:");
-        String contrasena = scanner.nextLine();
+        while (!contrasenaValida) {
+            System.out.print("Ingrese su contraseña (debe tener entre 4 y 8 dígitos): ");
+            contrasena = scanner.nextLine();
 
-        System.out.println("Elija su carrera:");
+            // Validar que la contraseña tenga entre 4 y 8 dígitos
+            if (contrasena.length() >= 4 && contrasena.length() <= 8 && contrasena.matches("\\d+")) {
+                contrasenaValida = true; // Contraseña válida
+            } else {
+                System.out.println("ERROR: La contraseña debe contener solo dígitos y tener entre 4 y 8 caracteres.");
+            }
+        }
+
+        System.out.print("De las siguientes carreras: \n");
         for (int i = 0; i < CARRERAS.length; i++) {
             System.out.println((i + 1) + ". " + CARRERAS[i]);
         }
+
+        System.out.print("Ingrese el número de la carrera a la que pertenece: ");
         int carreraIndex = scanner.nextInt() - 1;
-        scanner.nextLine(); // Limpiar el buffer
+        scanner.nextLine(); 
 
         if (carreraIndex < 0 || carreraIndex >= CARRERAS.length) {
-            System.out.println("Opción inválida.");
+            System.out.println("ERROR: Opción inválida (._.)");
             return;
         }
         String carrera = CARRERAS[carreraIndex];
 
+        // Obtener las iniciales de la carrera
+        String inicialesCarrera = obtenerIniciales(carrera);
+
         // Selección de rol
-        System.out.println("Seleccione el rol:");
+        System.out.println("De los siguientes roles:");
         System.out.println("1. Usuario");
         System.out.println("2. Revisor");
+        System.out.print("Ingrese el número del rol a elegir: ");
         int rolSeleccionado = scanner.nextInt();
-        scanner.nextLine(); // Limpiar el buffer
+        scanner.nextLine(); 
 
         PersonaPlantilla persona; // Declaración
         if (rolSeleccionado == 1) {
-            persona = new Usuario(nombre, apellido, correo, contrasena, carrera);
+            persona = new Usuario(nombre, apellido, correo, contrasena, inicialesCarrera);
         } else if (rolSeleccionado == 2) {
-            persona = new Revisor(nombre, apellido, correo, contrasena, carrera);
+            persona = new Revisor(nombre, apellido, correo, contrasena, inicialesCarrera);
         } else {
-            System.out.println("Rol inválido.");
-            return; // Asegúrate de salir aquí si el rol no es válido
+            System.out.println("ERROR: Rol inválido (._.) ");
+            return; 
         }
-
         guardarUsuario(persona); // Método para guardar el usuario
-        System.out.println("Registro exitoso.");
+        System.out.println("¡Registro exitoso ^._.^!");
     }
 
     private static void iniciarSesion(Scanner scanner) throws IOException {
-        System.out.println("Ingrese su correo:");
+        System.out.print("Ingrese su correo electrónico institucional: ");
         String correo = scanner.nextLine();
 
-        System.out.println("Ingrese su contraseña:");
+        System.out.print("Ingrese su contraseña: ");
         String contrasena = scanner.nextLine();
 
         PersonaPlantilla persona = buscarUsuario(correo, contrasena);
 
         if (persona != null) {
-            System.out.println("Inicio de sesión exitoso.");
+            System.out.println("¡Inicio de sesión exitoso ^._.^!");
             GestionLogin.mostrarMenuPorRol(persona); // Maneja el rol del usuario
         } else {
-            System.out.println("Correo o contraseña incorrectos.");
+            System.out.println("ERROR: Correo o contraseña incorrectos (._.) ");
         }
     }
 
@@ -132,5 +151,19 @@ public class Main {
             }
         }
         return null; // Si no se encuentra el usuario
+    }
+
+    // Método para obtener las iniciales en mayúsculas de la carrera
+    private static String obtenerIniciales(String carrera) {
+        String[] palabras = carrera.split(" ");
+        StringBuilder iniciales = new StringBuilder();
+        for (String palabra : palabras) {
+            // Solo añadir la letra si es mayúscula
+            char primeraLetra = palabra.charAt(0);
+            if (Character.isUpperCase(primeraLetra)) {
+                iniciales.append(primeraLetra); // Obtener la primera letra de cada palabra
+            }
+        }
+        return iniciales.toString(); // Retorna solo las letras mayúsculas
     }
 }
