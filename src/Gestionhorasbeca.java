@@ -54,8 +54,8 @@ public class GestionHorasBeca {
     public static class GestionEstudiantes {
         private List<Estudiante> estudiantes;
         // Modificar la ruta aquí
-        private final String archivoCSV = "C:\Users\diana\OneDrive\Documentos\GitHub\PROY-POO-SHARE-UVG\archivos_csv";
-    
+        private final String archivoCSV = "archivos_csv/estudiantes.csv"; // Cambia aquí la ruta
+
         // Constructor
         public GestionEstudiantes() {
             this.estudiantes = new ArrayList<>();
@@ -64,7 +64,10 @@ public class GestionHorasBeca {
 
         // Método para cargar estudiantes desde el archivo CSV
         public void cargarEstudiantes() {
+            // Código de depuración para verificar el directorio actual y la ruta del archivo
+            System.out.println("Directorio actual: " + new File(".").getAbsolutePath());
             System.out.println("Intentando abrir archivo en la ruta: " + archivoCSV);
+
             try (BufferedReader br = new BufferedReader(new FileReader(archivoCSV))) {
                 String linea;
                 while ((linea = br.readLine()) != null) {
