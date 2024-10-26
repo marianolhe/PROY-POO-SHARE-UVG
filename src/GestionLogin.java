@@ -81,6 +81,8 @@ public class GestionLogin {
 
         if (persona != null) {
             System.out.println("¡Inicio de sesión exitoso ^._.^!");
+            mostrarMenuPorRol(persona);
+
         } else {
             System.out.println("ERROR: Correo o contraseña incorrectos (._.) ");
         }
