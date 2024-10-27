@@ -1,5 +1,6 @@
 import java.io.*;
 import java.nio.file.*;
+import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -12,7 +13,7 @@ public class GestionPDF {
     private Scanner scanner; // Scanner como atributo de la clase
 
     public GestionPDF(String carpetaBase) {
-        this.carpetaBase = carpetaBase;
+        this.carpetaBase = Paths.get("APUNTES").toString();
         this.scanner = new Scanner(System.in); // Inicialización del Scanner
     }
 
@@ -100,30 +101,32 @@ public class GestionPDF {
         }
     }
 
-    // Método para listar los archivos en la carpeta de una carrera y curso específico
-    public List<String> listarArchivos(String carreraAbreviada, String codigoCurso) {
-        String nombreCarpeta = carreraAbreviada + "-" + codigoCurso;
-        Path rutaCarpeta = Paths.get(carpetaBase, nombreCarpeta);
-        List<String> archivos = new ArrayList<>();
+// Método para listar los archivos en la carpeta de una carrera, año y curso específico
+public List<String> listarArchivos(String carreraAbreviada, int anio, String codigoCurso) {
+    // Construir el nombre de la carpeta usando el formato: ICCTI-año-código
+    String nombreCarpeta = carreraAbreviada + "-" + anio + "-" + codigoCurso;
+    Path rutaCarpeta = Paths.get(carpetaBase, nombreCarpeta);
+    List<String> archivos = new ArrayList<>();
 
-        if (Files.exists(rutaCarpeta) && Files.isDirectory(rutaCarpeta)) {
-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(rutaCarpeta, "*.pdf")) {
-                for (Path archivo : stream) {
-                    archivos.add(archivo.getFileName().toString());
-                }
-            } catch (IOException e) {
-                System.out.println("Error al listar archivos: " + e.getMessage());
+    if (Files.exists(rutaCarpeta) && Files.isDirectory(rutaCarpeta)) {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(rutaCarpeta, "*.pdf")) {
+            for (Path archivo : stream) {
+                archivos.add(archivo.getFileName().toString());
             }
-        } else {
-            System.out.println("No se encontró la carpeta: " + rutaCarpeta.toString());
+        } catch (IOException e) {
+            System.out.println("Error al listar archivos: " + e.getMessage());
         }
-
-        return archivos;
+    } else {
+        System.out.println("No se encontró la carpeta: " + rutaCarpeta.toString());
     }
 
-    // Método para revisar archivos
-    public void revisarArchivo(String carreraAbreviada, String codigoCurso) {
-        List<String> archivos = listarArchivos(carreraAbreviada, codigoCurso);
+    return archivos;
+}
+
+
+    //*  Método para revisar archivos
+    public void revisarArchivo(String carreraAbreviada, int anio, String codigoCurso) {
+        List<String> archivos = listarArchivos(carreraAbreviada, anio, codigoCurso);
 
         if (archivos.isEmpty()) {
             System.out.println("No hay archivos para revisar.");
@@ -161,7 +164,7 @@ public class GestionPDF {
         }
 
         actualizarEstadoCSV(archivoSeleccionado, nuevoEstado);
-    }
+    } 
 
     // Método para actualizar el estado del csv para indicar si fue aprobado o denegado
     private void actualizarEstadoCSV(String nombreArchivo, String nuevoEstado) {
@@ -193,6 +196,71 @@ public class GestionPDF {
             System.out.println("Error al escribir en el archivo CSV: " + e.getMessage());
         }
     }
+
+    public void descargarArchivo() {
+       // Solicitar el año
+        System.out.print("Ingrese el año (en números): ");
+        int anio = scanner.nextInt();
+        scanner.nextLine(); 
+
+        // Solicitar el código del curso
+        System.out.print("Ingrese el código del curso: ");
+        String codigoCurso = scanner.nextLine();
+
+        // Crear el nombre de la carpeta
+        String nombreCarpeta = "ICCTI-" + anio + "-" + codigoCurso;
+        Path rutaCarpeta = Paths.get(carpetaBase, nombreCarpeta);
+
+    
+        // Verificar si la carpeta existe
+        if (Files.exists(rutaCarpeta) && Files.isDirectory(rutaCarpeta)) {
+            System.out.println("Carpeta encontrada: " + rutaCarpeta.toString());
+    
+            // Listar archivos aprobados
+            List<String> archivos = listarArchivos("ICCTI", anio, codigoCurso); // Asegúrate de tener este método
+    
+            if (archivos.isEmpty()) {
+                System.out.println("No hay archivos aprobados para descargar.");
+                return;
+            }
+    
+            System.out.println("Archivos disponibles para descargar:");
+            for (int i = 0; i < archivos.size(); i++) {
+                System.out.println((i + 1) + ". " + archivos.get(i));
+            }
+    
+            System.out.print("Seleccione el número del archivo que desea descargar: ");
+            int seleccion = scanner.nextInt();
+            scanner.nextLine(); // Limpiar el buffer
+    
+            // Validar selección
+            if (seleccion < 1 || seleccion > archivos.size()) {
+                System.out.println("Selección inválida.");
+                return;
+            }
+    
+            String archivoSeleccionado = archivos.get(seleccion - 1);
+            Path archivoRuta = rutaCarpeta.resolve(archivoSeleccionado);
+    
+            // Copiar archivo a la carpeta de descargas del sistema
+            Path carpetaDescargas = Paths.get(System.getProperty("user.home"), "Downloads");
+            Path destino = carpetaDescargas.resolve(archivoSeleccionado);
+    
+            try {
+                Files.copy(archivoRuta, destino, StandardCopyOption.REPLACE_EXISTING);
+                
+                // Cambiar la fecha de modificación al momento actual
+        Files.setLastModifiedTime(destino, FileTime.fromMillis(System.currentTimeMillis()));
+
+        System.out.println("Archivo descargado correctamente en: " + destino.toString());
+            } catch (IOException e) {
+                System.out.println("Error al descargar el archivo: " + e.getMessage());
+            }
+        } else {
+            System.out.println("No se encontró la carpeta: " + rutaCarpeta.toString());
+        }
+    }
+    
 
     public void cerrarScanner() {
         if (scanner != null) {

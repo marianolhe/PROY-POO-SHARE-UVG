@@ -192,7 +192,7 @@ public class GestionLogin {
                             gestionPDF.subirArchivo(rutaArchivo, codigoCurso, correoUsuario, anio);
                             break;
                         case 2:
-                            System.out.println("Descargando los documentos");
+                        gestionPDF.descargarArchivo();
                             break;
                         case 3:
                             continuar = false;
