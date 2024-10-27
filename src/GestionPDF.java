@@ -62,7 +62,7 @@ public class GestionPDF {
             String linea;
             while ((linea = reader.readLine()) != null) {
                 String[] datos = linea.split(",");
-                if (datos[0].equals(correoUsuario)) { // Asumiendo que el correo es la primera columna
+                if (datos[2].equals(correoUsuario)) { 
                     return datos[4]; // La carrera está en la quinta columna (índice 4)
                 }
             }
@@ -194,7 +194,6 @@ public class GestionPDF {
         }
     }
 
-    // Método para cerrar el Scanner al final del uso
     public void cerrarScanner() {
         if (scanner != null) {
             scanner.close();

@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class Main {
     // Define el archivo CSV donde se guardarán los usuarios
-    private static final String CSV_FILE = "archivos_csv/usuarios.csv"; // Ruta a la carpeta 'Base'
+    private static final String CSV_FILE = "archivos_csv/usuarios.csv"; // Ruta a la carpeta 'archivos_csv'
     private static final String[] CARRERAS = {"Ingeniería en Ciencias de la Computación y Tecnologías de la Información"}; 
 
     public static void main (String[] args) throws IOException {
@@ -158,8 +158,9 @@ public class Main {
         String[] palabras = carrera.split(" ");
         StringBuilder iniciales = new StringBuilder();
         for (String palabra : palabras) {
-            // Solo añadir la letra si es mayúscula
+            // Obtiene la primera letra de la palabra
             char primeraLetra = palabra.charAt(0);
+            // Solo añadir la letra si es mayúscula
             if (Character.isUpperCase(primeraLetra)) {
                 iniciales.append(primeraLetra); // Obtener la primera letra de cada palabra
             }
