@@ -1,4 +1,3 @@
-import java.io.*;
 import java.util.Scanner;
 
 public class Main {
@@ -6,7 +5,7 @@ public class Main {
     private static final String CSV_FILE = "archivos_csv/usuarios.csv"; // Ruta a la carpeta 'archivos_csv'
     private static final String[] CARRERAS = {"Ingeniería en Ciencias de la Computación y Tecnologías de la Información"}; 
 
-    public static void main (String[] args) throws IOException {
+    public static void main(String[] args) {
         Scanner entrada = new Scanner(System.in);
         boolean continuar = true;
 
@@ -21,17 +20,21 @@ public class Main {
             System.out.print("Ingrese el N° de la opción a elegir ^o^ : ");
 
             int opcion = entrada.nextInt();
-            entrada.nextLine(); 
+            entrada.nextLine();
 
-            if (opcion == 1) {
-                registrarUsuario(entrada);
-            } else if (opcion == 2) {
-                iniciarSesion(entrada);
-            } else if (opcion == 3) {
-                continuar = false;  
-                System.out.println("Saliendo del sistema (^-^)/ ...");
-            } else {
-                System.out.println("ERROR: Opción no válida (._.) ");
+            try {
+                if (opcion == 1) {
+                    gestionLogin.registrarUsuario(entrada);
+                } else if (opcion == 2) {
+                    gestionLogin.iniciarSesion(entrada);
+                } else if (opcion == 3) {
+                    continuar = false;
+                    System.out.println("Saliendo del sistema (^-^)/ ...");
+                } else {
+                    System.out.println("ERROR: Opción no válida (._.) ");
+                }
+            } catch (Exception e) {
+                System.out.println("Ha ocurrido un error: " + e.getMessage());
             }
         }
         entrada.close();
