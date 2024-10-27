@@ -171,6 +171,9 @@ public class GestionLogin {
                     int opcionUsuario = scanner.nextInt();
                     scanner.nextLine(); // Limpiar el buffer
 
+                    // Obtener el correo del usuario desde el objeto `persona` una sola vez
+                    String correoUsuario = persona.getCorreo();
+
                     switch (opcionUsuario) {
                         case 1:
                             // Solicitar la ruta del archivo al usuario
@@ -185,14 +188,11 @@ public class GestionLogin {
                             System.out.print("Ingrese el año (en números): ");
                             String anio = scanner.nextLine();
 
-                            // Obtener el correo del usuario desde el objeto `persona`
-                            String correoUsuario = persona.getCorreo();
-
                             // Llamar al método para subir el archivo, ahora con el formato correcto
                             gestionPDF.subirArchivo(rutaArchivo, codigoCurso, correoUsuario, anio);
                             break;
                         case 2:
-                        gestionPDF.descargarArchivo();
+                            gestionPDF.descargarArchivo(correoUsuario);
                             break;
                         case 3:
                             continuar = false;

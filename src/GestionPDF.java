@@ -7,10 +7,10 @@ import java.util.Scanner;
 
 public class GestionPDF {
     private String carpetaBase;
-    private static final String NOMBRE_ARCHIVO_CSV = "perfiles.csv"; // Nombre del archivo CSV de usuarios
+    private static final String ARCHIVO_PERFILES = "perfiles.csv"; // Nombre del archivo CSV de usuarios
     private static final String CARPETA_ARCHIVOS_CSV = "archivos_csv"; // Carpeta donde se guardará el CSV de apuntes
-    private static final String NOMBRE_ARCHIVO_APUNTES = "Apuntes.csv"; // Nombre del archivo CSV de apuntes
-    private Scanner scanner; // Scanner como atributo de la clase
+    private static final String ARCHIVO_APUNTES = "Apuntes.csv"; // Nombre del archivo CSV de apuntes
+    private Scanner scanner; 
 
     public GestionPDF(String carpetaBase) {
         this.carpetaBase = Paths.get("APUNTES").toString();
@@ -57,7 +57,7 @@ public class GestionPDF {
 
     // Método para obtener la carrera desde el CSV de usuarios
     private String obtenerCarreraDesdeCSV(String correoUsuario) {
-        File archivoCSV = new File(CARPETA_ARCHIVOS_CSV, NOMBRE_ARCHIVO_CSV);
+        File archivoCSV = new File(CARPETA_ARCHIVOS_CSV, ARCHIVO_PERFILES);
 
         try (BufferedReader reader = new BufferedReader(new FileReader(archivoCSV))) {
             String linea;
@@ -85,7 +85,7 @@ public class GestionPDF {
         }
 
         // Definir la ruta completa del archivo CSV
-        File archivoCSV = new File(CARPETA_ARCHIVOS_CSV, NOMBRE_ARCHIVO_APUNTES);
+        File archivoCSV = new File(CARPETA_ARCHIVOS_CSV, ARCHIVO_APUNTES);
 
         try (FileWriter writer = new FileWriter(archivoCSV, true)) {
             // Si el archivo no existe o está vacío, escribir los títulos de las columnas
@@ -101,30 +101,29 @@ public class GestionPDF {
         }
     }
 
-// Método para listar los archivos en la carpeta de una carrera, año y curso específico
-public List<String> listarArchivos(String carreraAbreviada, int anio, String codigoCurso) {
-    // Construir el nombre de la carpeta usando el formato: ICCTI-año-código
-    String nombreCarpeta = carreraAbreviada + "-" + anio + "-" + codigoCurso;
-    Path rutaCarpeta = Paths.get(carpetaBase, nombreCarpeta);
-    List<String> archivos = new ArrayList<>();
+    // Método para listar los archivos en la carpeta de una carrera, año y curso específico
+    public List<String> listarArchivos(String carreraAbreviada, int anio, String codigoCurso) {
+        // Construir el nombre de la carpeta usando el formato: ICCTI-año-código
+        String nombreCarpeta = carreraAbreviada + "-" + anio + "-" + codigoCurso;
+        Path rutaCarpeta = Paths.get(carpetaBase, nombreCarpeta);
+        List<String> archivos = new ArrayList<>();
 
-    if (Files.exists(rutaCarpeta) && Files.isDirectory(rutaCarpeta)) {
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(rutaCarpeta, "*.pdf")) {
-            for (Path archivo : stream) {
-                archivos.add(archivo.getFileName().toString());
+        if (Files.exists(rutaCarpeta) && Files.isDirectory(rutaCarpeta)) {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(rutaCarpeta, "*.pdf")) {
+                for (Path archivo : stream) {
+                    archivos.add(archivo.getFileName().toString());
+                }
+            } catch (IOException e) {
+                System.out.println("Error al listar archivos: " + e.getMessage());
             }
-        } catch (IOException e) {
-            System.out.println("Error al listar archivos: " + e.getMessage());
+        } else {
+            System.out.println("No se encontró la carpeta: " + rutaCarpeta.toString());
         }
-    } else {
-        System.out.println("No se encontró la carpeta: " + rutaCarpeta.toString());
+
+        return archivos;
     }
 
-    return archivos;
-}
-
-
-    //*  Método para revisar archivos
+    //  Método para revisar archivos
     public void revisarArchivo(String carreraAbreviada, int anio, String codigoCurso) {
         List<String> archivos = listarArchivos(carreraAbreviada, anio, codigoCurso);
 
@@ -169,7 +168,7 @@ public List<String> listarArchivos(String carreraAbreviada, int anio, String cod
     // Método para actualizar el estado del csv para indicar si fue aprobado o denegado
     private void actualizarEstadoCSV(String nombreArchivo, String nuevoEstado) {
         String carpetaCSV = CARPETA_ARCHIVOS_CSV;
-        File archivoCSV = new File(carpetaCSV, NOMBRE_ARCHIVO_APUNTES);
+        File archivoCSV = new File(carpetaCSV, ARCHIVO_APUNTES);
         List<String> lineasActualizadas = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(archivoCSV))) {
@@ -197,18 +196,37 @@ public List<String> listarArchivos(String carreraAbreviada, int anio, String cod
         }
     }
 
-    public void descargarArchivo() {
-       // Solicitar el año
-        System.out.print("Ingrese el año (en números): ");
-        int anio = scanner.nextInt();
-        scanner.nextLine(); 
-
+    public void descargarArchivo(String correoUsuario) {
+        int anio = 0;
+        boolean anioValido = false;
+    
+        // Solicitar el año
+        while (!anioValido) {
+            System.out.print("Ingrese el año al que pertenece el curso: ");
+            String anioInput = scanner.nextLine();
+    
+            try {
+                anio = Integer.parseInt(anioInput);
+                anioValido = true; // El año es válido
+            } catch (NumberFormatException e) {
+                System.out.println("ERROR: Ingrese un año válido.");
+            }
+        }
+    
         // Solicitar el código del curso
         System.out.print("Ingrese el código del curso: ");
         String codigoCurso = scanner.nextLine();
-
+    
+        // Obtener la carrera desde el CSV de usuarios
+        String carreraAbreviada = obtenerCarreraDesdeCSV(correoUsuario);
+    
+        if (carreraAbreviada == null) {
+            System.out.println("No se pudo encontrar la carrera asociada a este usuario.");
+            return;
+        }
+    
         // Crear el nombre de la carpeta
-        String nombreCarpeta = "ICCTI-" + anio + "-" + codigoCurso;
+        String nombreCarpeta = carreraAbreviada + "-" + anio + "-" + codigoCurso;
         Path rutaCarpeta = Paths.get(carpetaBase, nombreCarpeta);
 
     
@@ -217,7 +235,7 @@ public List<String> listarArchivos(String carreraAbreviada, int anio, String cod
             System.out.println("Carpeta encontrada: " + rutaCarpeta.toString());
     
             // Listar archivos aprobados
-            List<String> archivos = listarArchivos("ICCTI", anio, codigoCurso); // Asegúrate de tener este método
+            List<String> archivos = listarArchivos(correoUsuario, anio, codigoCurso); 
     
             if (archivos.isEmpty()) {
                 System.out.println("No hay archivos aprobados para descargar.");
@@ -231,7 +249,7 @@ public List<String> listarArchivos(String carreraAbreviada, int anio, String cod
     
             System.out.print("Seleccione el número del archivo que desea descargar: ");
             int seleccion = scanner.nextInt();
-            scanner.nextLine(); // Limpiar el buffer
+            scanner.nextLine(); 
     
             // Validar selección
             if (seleccion < 1 || seleccion > archivos.size()) {
@@ -248,11 +266,10 @@ public List<String> listarArchivos(String carreraAbreviada, int anio, String cod
     
             try {
                 Files.copy(archivoRuta, destino, StandardCopyOption.REPLACE_EXISTING);
-                
                 // Cambiar la fecha de modificación al momento actual
-        Files.setLastModifiedTime(destino, FileTime.fromMillis(System.currentTimeMillis()));
-
-        System.out.println("Archivo descargado correctamente en: " + destino.toString());
+                Files.setLastModifiedTime(destino, FileTime.fromMillis(System.currentTimeMillis()));
+        
+                System.out.println("Archivo descargado correctamente y guardado en: " + destino.toString());
             } catch (IOException e) {
                 System.out.println("Error al descargar el archivo: " + e.getMessage());
             }
@@ -261,7 +278,6 @@ public List<String> listarArchivos(String carreraAbreviada, int anio, String cod
         }
     }
     
-
     public void cerrarScanner() {
         if (scanner != null) {
             scanner.close();
