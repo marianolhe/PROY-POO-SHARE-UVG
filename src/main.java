@@ -1,4 +1,9 @@
 import java.util.Scanner;
+import java.io.IOException;
+import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 
 public class Main {
     // Define el archivo CSV donde se guardarán los usuarios
@@ -6,6 +11,7 @@ public class Main {
     private static final String[] CARRERAS = {"Ingeniería en Ciencias de la Computación y Tecnologías de la Información"}; 
 
     public static void main(String[] args) {
+        GestionLogin gestionLogin = new GestionLogin();
         Scanner entrada = new Scanner(System.in);
         boolean continuar = true;
 
