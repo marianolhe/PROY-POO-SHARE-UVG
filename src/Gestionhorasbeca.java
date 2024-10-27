@@ -53,8 +53,8 @@ public class GestionHorasBeca {
     // Clase para la gestión de estudiantes
     public static class GestionEstudiantes {
         private List<Estudiante> estudiantes;
-        // Modificar la ruta aquí
-        private final String archivoCSV = "archivos_csv/estudiantes.csv"; // Cambia aquí la ruta
+
+        private final String archivoCSV = "archivos_csv/estudiantes.csv"; 
 
         // Constructor
         public GestionEstudiantes() {
