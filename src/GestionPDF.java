@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class GestionPDF {
     private String carpetaBase;
-    private static final String NOMBRE_ARCHIVO_CSV = "usuarios.csv"; // Nombre del archivo CSV de usuarios
+    private static final String NOMBRE_ARCHIVO_CSV = "perfiles.csv"; // Nombre del archivo CSV de usuarios
     private static final String CARPETA_ARCHIVOS_CSV = "archivos_csv"; // Carpeta donde se guardará el CSV de apuntes
     private static final String NOMBRE_ARCHIVO_APUNTES = "Apuntes.csv"; // Nombre del archivo CSV de apuntes
     private Scanner scanner; // Scanner como atributo de la clase
