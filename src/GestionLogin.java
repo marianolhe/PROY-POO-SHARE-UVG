@@ -159,11 +159,11 @@ public class GestionLogin {
             switch (persona.getRol()) {
                 case "Usuario":
                     System.out.println("\n+ =============================================== +");
-                    System.out.println("                      MENÚ USUARIO               ");
+                    System.out.println("                      MENÚ ESTUDIANTE               ");
                     System.out.println("+ =============================================== +");
-                    System.out.printf("| %-5s | %-40s |\n", "1", "Subir Documento");
-                    System.out.printf("| %-5s | %-40s |\n", "2", "Descargar Documento");
-                    System.out.printf("| %-5s | %-40s |\n", "3", "Cerrar sesión");
+                    System.out.printf("| %-5s | %-40s |\n", "1", "Subir Apunte");
+                    System.out.printf("| %-5s | %-40s |\n", "2", "Descargar Apunte");
+                    System.out.printf("| %-5s | %-40s |\n", "3", "Cerrar Sesión");
                     System.out.println("+ =============================================== +");
                     System.out.print("Ingrese el N° de la opción a elegir ^o^: ");
 
@@ -197,7 +197,7 @@ public class GestionLogin {
                     System.out.println("                      MENÚ REVISOR               ");
                     System.out.println("+ =============================================== +");
                     System.out.printf("| %-5s | %-40s |\n", "1", "Revisar apuntes");
-                    System.out.printf("| %-5s | %-40s |\n", "2", "Cerrar sesión");
+                    System.out.printf("| %-5s | %-40s |\n", "2", "Cerrar Sesión");
                     System.out.println("+ =============================================== +");
                     System.out.print("Ingrese el N° de la opción a elegir ^o^: ");
 
@@ -223,8 +223,8 @@ public class GestionLogin {
                     System.out.println("                  MENÚ ADMINISTRADOR              ");
                     System.out.println("+ =============================================== +");
                     System.out.printf("| %-5s | %-40s |\n", "1", "Aceptar Revisor");
-                    System.out.printf("| %-5s | %-40s |\n", "2", "Gestionar Horas de Beca");
-                    System.out.printf("| %-5s | %-40s |\n", "3", "Salir");
+                    System.out.printf("| %-5s | %-40s |\n", "2", "Gestionar Horas Beca");
+                    System.out.printf("| %-5s | %-40s |\n", "3", "Cerrar Sesión");
                     System.out.println("+ =============================================== +");
                     System.out.print("Ingrese el N° de la opción a elegir ^o^: ");
 

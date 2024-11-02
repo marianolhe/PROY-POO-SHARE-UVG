@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,10 +17,10 @@ public class Main {
             System.out.println("+ =============================================== +");
             System.out.print("Ingrese el N° de la opción a elegir ^o^ : ");
 
-            int opcion = entrada.nextInt();
-            entrada.nextLine();
-
             try {
+                int opcion = entrada.nextInt(); // Intentar leer un número entero
+                entrada.nextLine(); 
+
                 if (opcion == 1) {
                     gestionLogin.registrarUsuario(entrada);
                 } else if (opcion == 2) {
@@ -28,8 +29,12 @@ public class Main {
                     continuar = false;
                     System.out.println("Saliendo del sistema (^-^)/ ...");
                 } else {
-                    System.out.println("ERROR: Opción no válida (._.) ");
+                    System.out.println("Opción no válida (._.)");
                 }
+            } catch (InputMismatchException e) {
+                // Manejar la entrada si no es un número
+                System.out.println("Opción no válida (._.)");
+                entrada.nextLine(); 
             } catch (Exception e) {
                 System.out.println("Ha ocurrido un error: " + e.getMessage());
             }
