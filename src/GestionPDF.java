@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import javax.swing.*;
-import java.awt.*;
 
 public class GestionPDF {
     private String carpetaBase;
@@ -19,55 +18,84 @@ public class GestionPDF {
         this.scanner = new Scanner(System.in); // Inicialización del Scanner
     }
 
-    public void subirArchivo(String codigoCurso, String correoUsuario, String anio) {
-        // Usar JFileChooser para seleccionar un archivo
+    public void seleccionarYSubirArchivo(String correoUsuario) {
+        // Crear un JFrame oculto
+        JFrame frame = new JFrame();
+        frame.setAlwaysOnTop(true); // Asegura que el JFrame esté siempre al frente
+        frame.setVisible(false); // Hacerlo invisible
+
+        // Crear un JFileChooser para seleccionar el archivo PDF
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Seleccionar archivo PDF");
+        fileChooser.setDialogTitle("Seleccionar Apunte");
+
+        // Establecer el directorio inicial al escritorio
+        String desktopPath = System.getProperty("user.home") + "/Desktop"; // Ruta al escritorio
+        fileChooser.setCurrentDirectory(new File(desktopPath)); // Cambiar al escritorio
+
+        // Filtrar solo archivos PDF
         fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos PDF", "pdf"));
 
-        int userSelection = fileChooser.showOpenDialog(null);
-        
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File archivo = fileChooser.getSelectedFile();
-            String rutaArchivo = archivo.getAbsolutePath();
+        // Abrir el diálogo y verificar si el usuario seleccionó un archivo
+        int resultado = fileChooser.showOpenDialog(frame); // Usar el JFrame oculto como padre
+        String rutaArchivo = "";
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            rutaArchivo = fileChooser.getSelectedFile().getAbsolutePath(); // Obtener la ruta del archivo seleccionado
+        } else {
+            System.out.println("No se seleccionó ningún archivo (._.).");
+            return; // Salir si no se seleccionó archivo
+        }
 
-            if (archivo.exists() && archivo.isFile() && rutaArchivo.endsWith(".pdf")) {
-                try {
-                    // Obtener la carrera desde el CSV de usuarios
-                    String carreraAbreviada = obtenerCarreraDesdeCSV(correoUsuario);
+        System.out.print("Para poder subir el archivo al curso correspondiente, necesitamos algunos datos ^o^ ...");
+        // Solicitar el código del curso
+        System.out.print("Código del curso (ej. CC2019): ");
+        String codigoCurso = scanner.nextLine();
 
-                    if (carreraAbreviada == null) {
-                        System.out.println("No se pudo encontrar la carrera asociada a este usuario.");
-                        return;
-                    }
+        // Solicitar el año
+        System.out.print("Año del curso  (ej. 3): ");
+        String anio = scanner.nextLine();
 
-                    // Concatenar carrera-abreviada, año y código del curso
-                    String nombreCarpeta = carreraAbreviada + "-" + anio + "-" + codigoCurso;
-                    Path rutaDestino = Paths.get(carpetaBase, nombreCarpeta);
+        // Llamar al método para subir el archivo
+        subirArchivo(rutaArchivo, codigoCurso, correoUsuario, anio);
+    }
 
-                    // Verificar si la carpeta existe
-                    if (Files.exists(rutaDestino) && Files.isDirectory(rutaDestino)) {
-                        // Guardar el PDF en la carpeta de destino
-                        Path archivoDestino = rutaDestino.resolve(archivo.getName());
-                        Files.copy(archivo.toPath(), archivoDestino);
-
-                        System.out.println("Archivo subido correctamente a la carpeta: " + rutaDestino.toString());
-
-                        // Guardar los datos en el archivo CSV
-                        guardarDatosCSV(archivo.getName(), rutaArchivo, codigoCurso, carreraAbreviada, "No revisado");
-                    } else {
-                        System.out.println("ERROR: No existe una carpeta para este curso en el directorio APUNTES.");
-                    }
-                } catch (IOException e) {
-                    System.out.println("Error al copiar el archivo: " + e.getMessage());
+    public void subirArchivo(String rutaArchivo, String codigoCurso, String correoUsuario, String anio) {
+        File archivo = new File(rutaArchivo); // Crear un objeto File a partir de la ruta proporcionada
+    
+        if (archivo.exists() && archivo.isFile() && rutaArchivo.endsWith(".pdf")) {
+            try {
+                // Obtener la carrera desde el CSV de usuarios
+                String carreraAbreviada = obtenerCarreraDesdeCSV(correoUsuario);
+    
+                if (carreraAbreviada == null) {
+                    System.out.println("No se pudo encontrar la carrera asociada a este usuario.");
+                    return;
                 }
-            } else {
-                System.out.println("ERROR: Asegúrate de que el archivo exista y sea un archivo PDF.");
+    
+                // Concatenar carrera-abreviada, año y código del curso
+                String nombreCarpeta = carreraAbreviada + "-" + anio + "-" + codigoCurso;
+                Path rutaDestino = Paths.get(carpetaBase, nombreCarpeta);
+    
+                // Verificar si la carpeta existe
+                if (Files.exists(rutaDestino) && Files.isDirectory(rutaDestino)) {
+                    // Guardar el PDF en la carpeta de destino
+                    Path archivoDestino = rutaDestino.resolve(archivo.getName());
+                    Files.copy(archivo.toPath(), archivoDestino, StandardCopyOption.REPLACE_EXISTING);
+    
+                    System.out.println("Archivo subido correctamente a la carpeta: " + rutaDestino.toString());
+    
+                    // Guardar los datos en el archivo CSV
+                    guardarDatosCSV(archivo.getName(), rutaArchivo, codigoCurso, carreraAbreviada, "No revisado");
+                } else {
+                    System.out.println("ERROR: No existe una carpeta para este curso en el directorio APUNTES.");
+                }
+            } catch (IOException e) {
+                System.out.println("Error al copiar el archivo: " + e.getMessage());
             }
         } else {
-            System.out.println("No se seleccionó ningún archivo.");
+            System.out.println("ERROR: Asegúrate de que el archivo exista y sea un archivo PDF.");
         }
     }
+    
 
     // Método para obtener la carrera desde el CSV de usuarios
     private String obtenerCarreraDesdeCSV(String correoUsuario) {
