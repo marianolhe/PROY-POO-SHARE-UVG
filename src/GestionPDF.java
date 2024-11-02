@@ -83,34 +83,39 @@ public class GestionPDF {
                 Path rutaDestino = Paths.get(carpetaBase, nombreCarpeta);
     
                 // Verificar si la carpeta existe
-        if (Files.exists(rutaDestino) && Files.isDirectory(rutaDestino)) {
-            // Crear un nuevo nombre de archivo con el carné
-            String nuevoNombreArchivo = archivo.getName().replace(".pdf", "_" + carne + ".pdf");
-            Path archivoDestino = rutaDestino.resolve(nuevoNombreArchivo); // Usar el nuevo nombre
+                if (Files.exists(rutaDestino) && Files.isDirectory(rutaDestino)) {
+                    // Crear un nuevo nombre de archivo con el carné
+                    String nuevoNombreArchivo = archivo.getName().replace(".pdf", "_" + carne + ".pdf");
+                    Path archivoDestino = rutaDestino.resolve(nuevoNombreArchivo); // Usar el nuevo nombre
 
-            // Guardar el PDF en la carpeta de destino
-            Files.copy(archivo.toPath(), archivoDestino, StandardCopyOption.REPLACE_EXISTING);
+                    // Verificar si el archivo de destino ya existe
+                    if (Files.exists(archivoDestino)) {
+                        throw new IOException("El archivo " + nuevoNombreArchivo + " ya existe en la carpeta de destino.");
+                    }
 
-            // Obtener los últimos 6 dígitos del nombre de la carpeta
-            String[] partesNombreCarpeta = nombreCarpeta.split("-");
-            String codigoBuscado = partesNombreCarpeta[partesNombreCarpeta.length - 1]; 
+                    // Guardar el PDF en la carpeta de destino
+                    Files.copy(archivo.toPath(), archivoDestino, StandardCopyOption.REPLACE_EXISTING);
 
-            // Leer el archivo Codigo Cursos.csv y buscar el código
-            String mensajeExito = buscarCodigo(codigoBuscado);
+                    // Obtener los últimos 6 dígitos del nombre de la carpeta
+                    String[] partesNombreCarpeta = nombreCarpeta.split("-");
+                    String codigoBuscado = partesNombreCarpeta[partesNombreCarpeta.length - 1];
 
-            if (mensajeExito != null) {
-                System.out.println("¡Archivo subido correctamente al curso " + mensajeExito + "!");
-            } else {
-                System.out.println("No se encontró un curso correspondiente al código ingresado.");
-            }
+                    // Leer el archivo Codigo Cursos.csv y buscar el código
+                    String mensajeExito = buscarCodigo(codigoBuscado);
 
-            // Guardar los datos en el archivo CSV
-            guardarDatosCSV(nuevoNombreArchivo, rutaArchivo, codigoCurso, carreraAbreviada, "No revisado");
-        } else {
+                    if (mensajeExito != null) {
+                        System.out.println("¡Archivo subido correctamente al curso " + mensajeExito + "!");
+                    } else {
+                        System.out.println("No se encontró un curso correspondiente al código ingresado.");
+                    }
+
+                    // Guardar los datos en el archivo CSV
+                    guardarDatosCSV(nuevoNombreArchivo, rutaArchivo, codigoCurso, carreraAbreviada, "No revisado");
+                } else {
                     System.out.println("No existe el curso con el código ingresado.");
                 }
             } catch (IOException e) {
-                System.out.println("Error al copiar el archivo: " + e.getMessage());
+                System.out.println(e.getMessage());
             }
         } else {
             System.out.println("Asegúrate de que el archivo exista y sea un archivo PDF (._.).");
