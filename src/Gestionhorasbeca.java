@@ -120,37 +120,4 @@ public class GestionHorasBeca {
         }
     }
 
-    // Menú principal
-    public static void main(String[] args) {
-        GestionEstudiantes gestion = new GestionEstudiantes();
-        Scanner scanner = new Scanner(System.in);
-
-        int opcion;
-        do {
-            System.out.println("Menú Principal:");
-            System.out.println("1. Agregar horas de beca");
-            System.out.println("0. Salir");
-            System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (opcion) {
-                case 1:
-                    System.out.print("Ingrese el ID del estudiante: ");
-                    String id = scanner.nextLine();
-                    System.out.print("Ingrese las horas de beca a añadir: ");
-                    int horas = scanner.nextInt();
-                    gestion.agregarHorasEstudiante(id, horas);
-                    break;
-                case 0:
-                    System.out.println("Saliendo del programa.");
-                    break;
-                default:
-                    System.out.println("Opción inválida.");
-                    break;
-            }
-        } while (opcion != 0);
-
-        scanner.close();
-    }
-}
+   
