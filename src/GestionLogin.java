@@ -170,12 +170,11 @@ public class GestionLogin {
                     int opcionUsuario = scanner.nextInt();
                     scanner.nextLine(); 
 
-                    // Obtener el correo del usuario desde el objeto `persona` 
+                    // Obtener el correo del usuario 
                     String correoUsuario = persona.getCorreo();
 
                     switch (opcionUsuario) {
                         case 1:
-                            // Llamar al método para subir el archivo
                             gestionPDF.seleccionarYSubirArchivo(correoUsuario);
                             break;
 
@@ -213,7 +212,7 @@ public class GestionLogin {
                             System.out.println("Cerrando sesión (^-^)/ ...");
                             break;
                         default:
-                            System.out.println("Opción no válida.");
+                            System.out.println("Opción no válida (._.).");
                             break;
                     }
                     break;
@@ -229,27 +228,27 @@ public class GestionLogin {
                     System.out.print("Ingrese el N° de la opción a elegir ^o^: ");
 
                     int opcionAdmin = scanner.nextInt();
-                    scanner.nextLine(); // Limpiar el buffer
+                    scanner.nextLine(); 
 
                     switch (opcionAdmin) {
                         case 1:
                             System.out.println("Aceptando revisores");
                             break;
                         case 2:
-                            System.out.println("Gestionando horas de beca");
+                            System.out.println("Gestionando horas beca");
                             break;
                         case 3:
                             continuar = false;
-                            System.out.println("Saliendo del menú de administrador...");
+                            System.out.println("errando sesión (^-^)/...");
                             break;
                         default:
-                            System.out.println("Opción no válida.");
+                            System.out.println("Opción no válida (._.).");
                             break;
                     }
                     break;
 
                 default:
-                    System.out.println("Rol no válido.");
+                    System.out.println("Rol no válido (._.).");
                     continuar = false;
                     break;
             }
