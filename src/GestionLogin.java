@@ -1,6 +1,9 @@
 import java.io.*;
 import java.util.Scanner;
 
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+
 public class GestionLogin {
     private static final String CSV_FILE = "archivos_csv/perfiles.csv";
     private static final String[] CARRERAS = {"Ingeniería en Ciencias de la Computación y Tecnologías de la Información"};
@@ -102,8 +105,8 @@ public class GestionLogin {
             // Escribir los datos del usuario en el archivo
             try (FileWriter writer = new FileWriter(archivo, true)) {
                 writer.write(persona.getNombre() + "," + persona.getApellido() + "," +
-                             persona.getCorreo() + "," + persona.getContrasena() + "," +
-                             persona.getCarrera() + "," + persona.getRol() + "\n");
+                                persona.getCorreo() + "," + persona.getContrasena() + "," +
+                                persona.getCarrera() + "," + persona.getRol() + "\n");
                 System.out.println("Usuario guardado en el archivo correctamente.");
             }
             
@@ -176,9 +179,31 @@ public class GestionLogin {
 
                     switch (opcionUsuario) {
                         case 1:
-                            // Solicitar la ruta del archivo al usuario
-                            System.out.print("Ingrese la ruta completa del archivo PDF: ");
-                            String rutaArchivo = scanner.nextLine();
+                           // Crear un JFrame oculto
+                            JFrame frame = new JFrame();
+                            frame.setAlwaysOnTop(true); // Asegura que el JFrame esté siempre al frente
+                            frame.setVisible(false); // Hacerlo invisible
+
+                            // Crear un JFileChooser para seleccionar el archivo PDF
+                            JFileChooser fileChooser = new JFileChooser();
+                            fileChooser.setDialogTitle("Seleccionar archivo PDF");
+                            
+                            // Establecer el directorio inicial (opcional)
+                            String desktopPath = System.getProperty("user.home") + "/Desktop"; // Ruta al escritorio
+                            fileChooser.setCurrentDirectory(new java.io.File(desktopPath)); // Cambiar si deseas un directorio específico
+
+                            // Filtrar solo archivos PDF
+                            fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos PDF", "pdf"));
+
+                            // Abrir el diálogo y verificar si el usuario seleccionó un archivo
+                            int resultado = fileChooser.showOpenDialog(frame); // Usar el JFrame oculto como padre
+                            String rutaArchivo = "";
+                            if (resultado == JFileChooser.APPROVE_OPTION) {
+                                rutaArchivo = fileChooser.getSelectedFile().getAbsolutePath(); // Obtener la ruta del archivo seleccionado
+                            } else {
+                                System.out.println("No se seleccionó ningún archivo.");
+                                break; // Salir del case si no se seleccionó archivo
+                            }
 
                             // Solicitar el código del curso
                             System.out.print("Ingrese el código del curso: ");
@@ -189,7 +214,7 @@ public class GestionLogin {
                             String anio = scanner.nextLine();
 
                             // Llamar al método para subir el archivo, ahora con el formato correcto
-                            gestionPDF.subirArchivo(rutaArchivo, codigoCurso, correoUsuario, anio);
+                            gestionPDF.subirArchivo(codigoCurso, correoUsuario, anio);
                             break;
                         case 2:
                             gestionPDF.descargarArchivo(correoUsuario);
