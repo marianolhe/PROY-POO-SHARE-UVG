@@ -50,7 +50,7 @@ public class GestionPDF {
         System.out.print("\nCódigo del curso (ej. CC2019): ");
         String codigoCurso = scanner.nextLine();
 
-        // Solicitar el año
+        // Solicitar el año del curso
         System.out.print("Año del curso  (ej. 3): ");
         String anio = scanner.nextLine();
 
@@ -63,53 +63,64 @@ public class GestionPDF {
     
         if (archivo.exists() && archivo.isFile() && rutaArchivo.endsWith(".pdf")) {
             try {
-                // Obtener la carrera desde el CSV de usuarios
+                // Obtener la carrera el estudiante a partir del correo con el que se inicio sesion
                 String carreraAbreviada = obtenerCarreraDesdeCSV(correoUsuario);
     
                 if (carreraAbreviada == null) {
-                    System.out.println("No se pudo encontrar la carrera asociada a este usuario.");
+                    System.out.println("No se pudo encontrar la carrera asociada a este usuario (._.).");
                     return;
                 }
     
-                // Obtener el carné del estudiante a partir del correo
+                // Obtener el carné del estudiante a partir del correo con el que se inicio sesion
                 String carne = obtenerCarneDesdeCorreo(correoUsuario);
                 if (carne == null) {
-                    System.out.println("No se pudo obtener el carné del usuario desde el correo.");
+                    System.out.println("No se pudo obtener el carné del usuario (._.).");
                     return;
                 }
 
-                // Concatenar carrera-abreviada, año y código del curso
+                // Concatenar carrera abreviada, año y código del curso para encontrar la carpeta donde se cuardara el apunte
                 String nombreCarpeta = carreraAbreviada + "-" + anio + "-" + codigoCurso;
                 Path rutaDestino = Paths.get(carpetaBase, nombreCarpeta);
     
                 // Verificar si la carpeta existe
-                if (Files.exists(rutaDestino) && Files.isDirectory(rutaDestino)) {
-                    // Crear un nuevo nombre de archivo con el carné
-                String nuevoNombreArchivo = archivo.getName().replace(".pdf", "_" + carne + ".pdf");
-                Path archivoDestino = rutaDestino.resolve(nuevoNombreArchivo); // Usar el nuevo nombre
+        if (Files.exists(rutaDestino) && Files.isDirectory(rutaDestino)) {
+            // Crear un nuevo nombre de archivo con el carné
+            String nuevoNombreArchivo = archivo.getName().replace(".pdf", "_" + carne + ".pdf");
+            Path archivoDestino = rutaDestino.resolve(nuevoNombreArchivo); // Usar el nuevo nombre
 
-                    // Guardar el PDF en la carpeta de destino
-                    Files.copy(archivo.toPath(), archivoDestino, StandardCopyOption.REPLACE_EXISTING);
-    
-                    System.out.println("Archivo subido correctamente a la carpeta: " + rutaDestino.toString());
-    
-                    // Guardar los datos en el archivo CSV
-                    guardarDatosCSV(nuevoNombreArchivo, rutaArchivo, codigoCurso, carreraAbreviada, "No revisado");
-                } else {
-                    System.out.println("ERROR: No existe una carpeta para este curso en el directorio APUNTES.");
+            // Guardar el PDF en la carpeta de destino
+            Files.copy(archivo.toPath(), archivoDestino, StandardCopyOption.REPLACE_EXISTING);
+
+            // Obtener los últimos 6 dígitos del nombre de la carpeta
+            String[] partesNombreCarpeta = nombreCarpeta.split("-");
+            String codigoBuscado = partesNombreCarpeta[partesNombreCarpeta.length - 1]; 
+
+            // Leer el archivo Codigo Cursos.csv y buscar el código
+            String mensajeExito = buscarCodigo(codigoBuscado);
+
+            if (mensajeExito != null) {
+                System.out.println("¡Archivo subido correctamente al curso " + mensajeExito + "!");
+            } else {
+                System.out.println("No se encontró un curso correspondiente al código ingresado.");
+            }
+
+            // Guardar los datos en el archivo CSV
+            guardarDatosCSV(nuevoNombreArchivo, rutaArchivo, codigoCurso, carreraAbreviada, "No revisado");
+        } else {
+                    System.out.println("No existe el curso con el código ingresado.");
                 }
             } catch (IOException e) {
                 System.out.println("Error al copiar el archivo: " + e.getMessage());
             }
         } else {
-            System.out.println("ERROR: Asegúrate de que el archivo exista y sea un archivo PDF.");
+            System.out.println("Asegúrate de que el archivo exista y sea un archivo PDF (._.).");
         }
     }
     
     private String obtenerCarneDesdeCorreo(String correo) {
         // Obtener las primeras tres letras y extraer el carné
         String carne = null;
-        String[] partes = correo.split("@"); // Dividir el correo en dos partes usando '@'
+        String[] partes = correo.split("@");
         
         if (partes.length > 0) {
             // Asegurarse de que el carné tenga al menos 5 caracteres después de las primeras tres letras
@@ -121,6 +132,30 @@ public class GestionPDF {
         return carne; // Retornar el carné o null si no se pudo obtener
     }
 
+    private String buscarCodigo(String codigoBuscado) {
+        String rutaCSV = "archivos_csv/Codigo Cursos.csv"; // Ruta al archivo CSV
+        String resultado = null;
+    
+        try (BufferedReader br = new BufferedReader(new FileReader(rutaCSV))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] datos = linea.split(","); // Suponiendo que el CSV está separado por comas
+                if (datos.length >= 3) {
+                    String codigo = datos[1].trim(); // Segunda columna
+                    if (codigo.equals(codigoBuscado)) {
+                        resultado = datos[2].trim(); // Tercera columna
+                        break; // Salir del bucle si se encuentra el código
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo CSV: " + e.getMessage());
+        }
+    
+        return resultado; // Devuelve el resultado o null si no se encontró
+    }
+
+    
     // Método para obtener la carrera desde el CSV de usuarios
     private String obtenerCarreraDesdeCSV(String correoUsuario) {
         File archivoCSV = new File(CARPETA_ARCHIVOS_CSV, ARCHIVO_PERFILES);
@@ -130,7 +165,7 @@ public class GestionPDF {
             while ((linea = reader.readLine()) != null) {
                 String[] datos = linea.split(",");
                 if (datos[2].equals(correoUsuario)) { 
-                    return datos[4]; // La carrera está en la quinta columna (índice 4)
+                    return datos[4]; 
                 }
             }
         } catch (IOException e) {
@@ -161,7 +196,6 @@ public class GestionPDF {
 
             // Escribir los datos del archivo, incluyendo el estado "No revisado"
             writer.write(nombreArchivo + "," + rutaArchivo + "," + codigoCurso + "," + carreraAbreviada + "," + estado + "\n");
-            System.out.println("Datos guardados correctamente en " + archivoCSV.getPath());
         } catch (IOException e) {
             System.out.println("Error al escribir en el archivo CSV: " + e.getMessage());
         }
