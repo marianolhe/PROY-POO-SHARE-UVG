@@ -340,7 +340,7 @@ public class GestionPDF {
             System.out.println("Carpeta encontrada: " + rutaCarpeta.toString());
     
             // Listar archivos aprobados
-            List<String> archivos = listarArchivos(correoUsuario, anio, codigoCurso); 
+            List<String> archivos = listarArchivos(carreraAbreviada, anio, codigoCurso); 
     
             if (archivos.isEmpty()) {
                 System.out.println("No hay archivos aprobados para descargar en este curso (._.).");
