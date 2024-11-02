@@ -326,11 +326,11 @@ public class GestionPDF {
         String carreraAbreviada = obtenerCarreraDesdeCSV(correoUsuario);
     
         if (carreraAbreviada == null) {
-            System.out.println("No se pudo encontrar la carrera asociada a este usuario.");
+            System.out.println("No se pudo encontrar la carrera asociada a este usuario (._.)");
             return;
         }
     
-        // Crear el nombre de la carpeta
+        // Crear el nombre de la carpeta concetenando
         String nombreCarpeta = carreraAbreviada + "-" + anio + "-" + codigoCurso;
         Path rutaCarpeta = Paths.get(carpetaBase, nombreCarpeta);
 
@@ -343,22 +343,25 @@ public class GestionPDF {
             List<String> archivos = listarArchivos(correoUsuario, anio, codigoCurso); 
     
             if (archivos.isEmpty()) {
-                System.out.println("No hay archivos aprobados para descargar.");
+                System.out.println("No hay archivos aprobados para descargar en este curso (._.).");
                 return;
             }
     
-            System.out.println("Archivos disponibles para descargar:");
+            System.out.println("\n+ ----------------------------------------------- +");
+            System.out.println("              Archivos Disponibles para Descargar  ");
+            System.out.println("+ ----------------------------------------------- +");
             for (int i = 0; i < archivos.size(); i++) {
-                System.out.println((i + 1) + ". " + archivos.get(i));
+                System.out.printf("| %-5s | %-40s |\n", (i + 1), archivos.get(i));
             }
-    
+            System.out.println("+ ----------------------------------------------- +");
             System.out.print("Seleccione el número del archivo que desea descargar: ");
+            
             int seleccion = scanner.nextInt();
             scanner.nextLine(); 
     
             // Validar selección
             if (seleccion < 1 || seleccion > archivos.size()) {
-                System.out.println("Selección inválida.");
+                System.out.println("Selección inválida (._.).");
                 return;
             }
     
@@ -374,7 +377,7 @@ public class GestionPDF {
                 // Cambiar la fecha de modificación al momento actual
                 Files.setLastModifiedTime(destino, FileTime.fromMillis(System.currentTimeMillis()));
         
-                System.out.println("Archivo descargado correctamente y guardado en: " + destino.toString());
+                System.out.println("¡Apunte descargado correctamente!");
             } catch (IOException e) {
                 System.out.println("Error al descargar el archivo: " + e.getMessage());
             }
