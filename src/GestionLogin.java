@@ -179,8 +179,7 @@ public class GestionLogin {
                             break;
 
                         case 2:
-                            gestionPDF.descargarArchivo(correoUsuario);
-                            break;
+                            
                         case 3:
                             continuar = false;
                             System.out.println("Cerrando sesión (^-^)/...");
