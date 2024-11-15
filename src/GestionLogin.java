@@ -2,61 +2,75 @@ import java.io.*;
 import java.util.Scanner;
 
 public class GestionLogin {
-    private static final String CSV_FILE = "archivos_csv/perfiles.csv";
+    private static final String CSV_FILE = "../archivos_csv/perfiles.csv";
     private static final String[] CARRERAS = {"Ingeniería en Ciencias de la Computación y Tecnologías de la Información"};
 
     private static Scanner scanner = new Scanner(System.in);
 
     public void registrarUsuario(Scanner scanner) throws IOException {
         System.out.println("Para crear su perfil, necesitamos algunos datos ^_^");
-
+    
         System.out.print("Ingrese su nombre: ");
         String nombre = scanner.nextLine();
-
+    
         System.out.print("Ingrese su apellido: ");
         String apellido = scanner.nextLine();
-
-        System.out.print("Ingrese su correo electrónico institucional: ");
-        String correo = scanner.nextLine();
-
-        boolean contrasenaValida = false;
-        String contrasena = "";
-
-        while (!contrasenaValida) {
-            System.out.print("Ingrese su contraseña (debe tener entre 4 y 8 dígitos): ");
-            contrasena = scanner.nextLine();
-
-            if (contrasena.length() >= 4 && contrasena.length() <= 8 && contrasena.matches("\\d+")) {
-                contrasenaValida = true;
+    
+        // Validación del correo
+        String correo = "";
+        boolean correoValido = false;
+        while (!correoValido) {
+            System.out.print("Ingrese su correo electrónico institucional: ");
+            correo = scanner.nextLine();
+    
+            if (correo.contains("@") && correo.endsWith("@uvg.edu.gt")) {
+                correoValido = true;
             } else {
-                System.out.println("ERROR: La contraseña debe contener solo dígitos y tener entre 4 y 8 caracteres.");
+                System.out.println("ERROR: El correo debe contener '@' y terminar en '@uvg.edu.gt'.");
             }
         }
-
+    
+        // Validación de la contraseña
+        String contrasena = "";
+        boolean contrasenaValida = false;
+        while (!contrasenaValida) {
+            System.out.print("Ingrese su contraseña (debe tener una mayúscula, un número y un carácter especial): ");
+            contrasena = scanner.nextLine();
+    
+            if (contrasena.length() >= 4 && contrasena.length() <= 8 &&
+                contrasena.matches(".*[A-Z].*") &&  // Al menos una mayúscula
+                contrasena.matches(".*\\d.*") &&   // Al menos un número
+                contrasena.matches(".*[!@#$%^&*(),.?\":{}|<>].*")) { // Al menos un carácter especial
+                contrasenaValida = true;
+            } else {
+                System.out.println("ERROR: La contraseña debe tener entre 4 y 8 caracteres, una letra mayúscula, un número y un carácter especial.");
+            }
+        }
+    
         System.out.print("De las siguientes carreras: \n");
         for (int i = 0; i < CARRERAS.length; i++) {
             System.out.println((i + 1) + ". " + CARRERAS[i]);
         }
-
+    
         System.out.print("Ingrese el número de la carrera a la que pertenece: ");
         int carreraIndex = scanner.nextInt() - 1;
         scanner.nextLine();
-
+    
         if (carreraIndex < 0 || carreraIndex >= CARRERAS.length) {
             System.out.println("ERROR: Opción inválida (._.)");
             return;
         }
         String carrera = CARRERAS[carreraIndex];
-
+    
         String inicialesCarrera = obtenerIniciales(carrera);
-
+    
         System.out.println("De los siguientes roles:");
         System.out.println("1. Usuario");
         System.out.println("2. Revisor");
         System.out.print("Ingrese el número del rol a elegir: ");
         int rolSeleccionado = scanner.nextInt();
         scanner.nextLine();
-
+    
         PersonaPlantilla persona;
         if (rolSeleccionado == 1) {
             persona = new Usuario(nombre, apellido, correo, contrasena, inicialesCarrera);
@@ -66,9 +80,11 @@ public class GestionLogin {
             System.out.println("ERROR: Rol inválido (._.) ");
             return;
         }
+    
         guardarUsuario(persona);
         System.out.println("¡Registro exitoso ^._.^!");
     }
+    
 
     public void iniciarSesion(Scanner scanner) throws IOException {
         System.out.print("Ingrese su correo electrónico institucional: ");
