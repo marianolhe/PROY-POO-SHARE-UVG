@@ -15,7 +15,7 @@ public class MainPDF {
 
         // Usar JFileChooser para seleccionar el archivo PDF
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Prueba el archivo PDF");
+        fileChooser.setDialogTitle("Seleccione el archivo PDF");
         
         // Filtrar solo archivos PDF
         fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos PDF", "pdf"));
