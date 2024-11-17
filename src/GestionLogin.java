@@ -34,8 +34,8 @@ public class GestionLogin {
 
         try (FileWriter writer = new FileWriter(archivo, true)) {
             writer.write(persona.getNombre() + "," + persona.getApellido() + "," +
-                         persona.getCorreo() + "," + persona.getContrasena() + "," +
-                         persona.getCarrera() + "," + persona.getRol() + "\n");
+                        persona.getCorreo() + "," + persona.getContrasena() + "," +
+                        persona.getCarrera() + "," + persona.getRol() + "\n");
         }
     }
 
