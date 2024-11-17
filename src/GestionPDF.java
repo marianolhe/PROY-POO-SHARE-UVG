@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 import javax.swing.*;
 
+
 public class GestionPDF {
     private String carpetaBase;
     private static final String ARCHIVO_PERFILES = "perfiles.csv"; // Nombre del archivo CSV de usuarios
