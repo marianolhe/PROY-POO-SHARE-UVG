@@ -127,9 +127,9 @@ public class InterfazLogin {
 
     private boolean validarContrasena(String contrasena) {
         return contrasena.length() >= 4 && contrasena.length() <= 8 &&
-               contrasena.matches(".*[A-Z].*") &&
-               contrasena.matches(".*\\d.*") &&
-               contrasena.matches(".*[!@#$%^&*(),.?\":{}|<>].*");
+            contrasena.matches(".*[A-Z].*") &&
+            contrasena.matches(".*\\d.*") &&
+            contrasena.matches(".*[!@#$%^&*(),.?\":{}|<>].*");
     }
 
     public static void main(String[] args) {

@@ -93,6 +93,8 @@ public class GestionLogin {
             return;
         }
 
+        GestionPDF gestionPDF = new GestionPDF("APUNTES"); // Instancia de GestionPDF
+
         String opcion;
         do {
             opcion = (String) JOptionPane.showInputDialog(
@@ -107,7 +109,7 @@ public class GestionLogin {
             if (opcion != null && !opcion.equals("Cerrar Sesión")) {
                 if (opcion.equals("Subir Apunte")) {
                     // Lógica para subir apunte
-                    JOptionPane.showMessageDialog(null, "Función no implementada");
+                    gestionPDF.seleccionarYSubirArchivo(persona.getCorreo());
                 } else if (opcion.equals("Descargar Apunte")) {
                     // Lógica para descargar apunte
                     JOptionPane.showMessageDialog(null, "Función no implementada");
