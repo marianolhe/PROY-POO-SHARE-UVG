@@ -3,7 +3,7 @@ import javax.swing.JOptionPane;
 
 public class GestionLogin {
     private static final String CSV_FILE = "../archivos_csv/perfiles.csv";
-    private static final String[] CARRERAS = {"Ingeniería en Ciencias de la Computación y Tecnologías de la Información"};
+    //private static final String[] CARRERAS = {"Ingeniería en Ciencias de la Computación y Tecnologías de la Información"};
 
     public void registrarUsuario(String nombre, String apellido, String correo, String contrasena, String carrera, String rol) throws IOException {
         String inicialesCarrera = obtenerIniciales(carrera);

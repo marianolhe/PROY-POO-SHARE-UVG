@@ -33,7 +33,7 @@ public class MainPDF {
 
         // Pedir la carrera abreviada
         System.out.print("Ingrese el año: ");
-        int anio = scanner.nextInt();
+        //int anio = scanner.nextInt();
 
         // Pedir el código del curso
         System.out.print("Ingrese el código del curso (por ejemplo, CC2005): ");
@@ -47,7 +47,7 @@ public class MainPDF {
         gestionPDF.subirArchivo(rutaArchivo, codigoCurso, carreraAbreviada, carreraAbreviada);
 
         // Llamar al método para revisar archivo
-        gestionPDF.revisarArchivo(carreraAbreviada, anio, codigoCurso);
+        //gestionPDF.revisarArchivo(carreraAbreviada, anio, codigoCurso);
         scanner.close();
 
     }

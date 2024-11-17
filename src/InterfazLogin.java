@@ -136,7 +136,7 @@ public class InterfazLogin {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    InterfazLogin window = new InterfazLogin();
+                    new InterfazLogin();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
