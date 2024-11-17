@@ -97,27 +97,31 @@ public class GestionPDF {
     }
 
     private String buscarCodigo(String codigoBuscado) {
-        String rutaCSV = "archivos_csv/Codigo Cursos.csv";
+        String rutaCSV = Paths.get("archivos_csv", "Codigo Cursos.csv").toString(); 
         String resultado = null;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(rutaCSV))) {
+    
+        File archivoCSV = new File(rutaCSV);
+        if (!archivoCSV.exists()) {
+            System.out.println("Archivo no encontrado en: " + archivoCSV.getAbsolutePath());
+            return null;
+        }
+    
+        try (BufferedReader br = new BufferedReader(new FileReader(archivoCSV))) {
             String linea;
             while ((linea = br.readLine()) != null) {
                 String[] datos = linea.split(",");
-                if (datos.length >= 3) {
-                    String codigo = datos[1].trim();
-                    if (codigo.equals(codigoBuscado)) {
-                        resultado = datos[2].trim();
-                        break;
-                    }
+                if (datos.length >= 3 && datos[1].trim().equals(codigoBuscado)) {
+                    resultado = datos[2].trim();
+                    break;
                 }
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error al leer el archivo CSV: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Error al leer el archivo CSV: " + e.getMessage());
         }
-
+    
         return resultado;
     }
+    
 
     private String obtenerCarreraDesdeCSV(String correoUsuario) {
         File archivoCSV = new File(CARPETA_ARCHIVOS_CSV, ARCHIVO_PERFILES);
