@@ -112,7 +112,7 @@ public class GestionLogin {
                     gestionPDF.seleccionarYSubirArchivo(persona.getCorreo());
                 } else if (opcion.equals("Descargar Apunte")) {
                     // Lógica para descargar apunte
-                    JOptionPane.showMessageDialog(null, "Función no implementada");
+                    gestionPDF.descargarArchivo(persona.getCorreo());
                 } else if (opcion.equals("Revisar apuntes")) {
                     // Lógica para revisar apuntes
                     JOptionPane.showMessageDialog(null, "Función no implementada");
