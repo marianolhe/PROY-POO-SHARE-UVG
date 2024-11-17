@@ -27,7 +27,7 @@ public class InterfazLogin {
         }
     
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(510, 340);
+        frame.setSize(550, 350);
         frame.setLocationRelativeTo(null); // Centrar la ventana en la pantalla
     
         // Crear un panel con fondo
