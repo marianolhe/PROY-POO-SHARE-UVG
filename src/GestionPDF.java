@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Scanner;
 import javax.swing.*;
 
-
 public class GestionPDF {
     private String carpetaBase;
     private static final String ARCHIVO_PERFILES = "perfiles.csv"; // Nombre del archivo CSV de usuarios
@@ -207,175 +206,175 @@ public class GestionPDF {
         }
     }
 
-// Método para listar los archivos en la carpeta de una carrera, año y curso específico
-public List<String> listarArchivos(String carreraAbreviada, int anio, String codigoCurso) {
-    // Construir el nombre de la carpeta usando el formato: ICCTI-año-código
-    String nombreCarpeta = carreraAbreviada + "-" + anio + "-" + codigoCurso;
-    Path rutaCarpeta = Paths.get(carpetaBase, nombreCarpeta);
-    List<String> archivos = new ArrayList<>();
+    // Método para listar los archivos en la carpeta de una carrera, año y curso específico
+    public List<String> listarArchivos(String carreraAbreviada, int anio, String codigoCurso) {
+        // Construir el nombre de la carpeta usando el formato: ICCTI-año-código
+        String nombreCarpeta = carreraAbreviada + "-" + anio + "-" + codigoCurso;
+        Path rutaCarpeta = Paths.get(carpetaBase, nombreCarpeta);
+        List<String> archivos = new ArrayList<>();
 
-    if (Files.exists(rutaCarpeta) && Files.isDirectory(rutaCarpeta)) {
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(rutaCarpeta, "*.pdf")) {
-            for (Path archivo : stream) {
-                archivos.add(archivo.getFileName().toString());
+        if (Files.exists(rutaCarpeta) && Files.isDirectory(rutaCarpeta)) {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(rutaCarpeta, "*.pdf")) {
+                for (Path archivo : stream) {
+                    archivos.add(archivo.getFileName().toString());
+                }
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "Error al listar archivos: " + e.getMessage());
             }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error al listar archivos: " + e.getMessage());
+        } else {
+            JOptionPane.showMessageDialog(null, "No se encontró la carpeta: " + rutaCarpeta.toString());
         }
-    } else {
-        JOptionPane.showMessageDialog(null, "No se encontró la carpeta: " + rutaCarpeta.toString());
+
+        return archivos;
     }
 
-    return archivos;
-}
-
-// Método para revisar archivos
-public void revisarArchivo(String carreraAbreviada, int anio, String codigoCurso) {
-    List<String> archivos = listarArchivos(carreraAbreviada, anio, codigoCurso);
-
-    if (archivos.isEmpty()) {
-        JOptionPane.showMessageDialog(null, "No hay archivos para revisar.");
-        return; // Salir del método si no hay archivos
-    }
-
-    String archivoSeleccionado = (String) JOptionPane.showInputDialog(null,
-        "Seleccione el archivo que desea revisar", "Revisar archivo",
-        JOptionPane.PLAIN_MESSAGE, null, archivos.toArray(), archivos.get(0));
-
-    if (archivoSeleccionado == null) {
-        return; // Salir del método si no se selecciona un archivo
-    }
-
-    String decision = JOptionPane.showInputDialog(null, "¿Desea aprobar o rechazar el archivo? (aprobar/rechazar):");
-    String nuevoEstado = "";
-
-    if (decision.equalsIgnoreCase("aprobar")) {
-        nuevoEstado = "Aprobado";
-    } else if (decision.equalsIgnoreCase("rechazar")) {
-        nuevoEstado = "Rechazado";
-    } else {
-        JOptionPane.showMessageDialog(null, "Decisión inválida.");
-        return; // Salir del método si la decisión es inválida
-    }
-
-    actualizarEstadoCSV(archivoSeleccionado, nuevoEstado);
-}
-
-// Método para actualizar el estado del csv para indicar si fue aprobado o denegado
-private void actualizarEstadoCSV(String nombreArchivo, String nuevoEstado) {
-    String carpetaCSV = CARPETA_ARCHIVOS_CSV;
-    File archivoCSV = new File(carpetaCSV, ARCHIVO_APUNTES);
-    List<String> lineasActualizadas = new ArrayList<>();
-
-    try (BufferedReader reader = new BufferedReader(new FileReader(archivoCSV))) {
-        String linea;
-        while ((linea = reader.readLine()) != null) {
-            String[] datos = linea.split(",");
-            if (datos[0].equals(nombreArchivo)) {
-                datos[4] = nuevoEstado;
-                linea = String.join(",", datos);
-            }
-            lineasActualizadas.add(linea);
-        }
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(null, "Error al leer el archivo CSV: " + e.getMessage());
-    }
-
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivoCSV))) {
-        for (String linea : lineasActualizadas) {
-            writer.write(linea);
-            writer.newLine();
-        }
-        JOptionPane.showMessageDialog(null, "Estado actualizado a: " + nuevoEstado);
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(null, "Error al escribir en el archivo CSV: " + e.getMessage());
-    }
-}
-
-// Método para descargar archivo con JList para seleccionar archivo
-public void descargarArchivo(String correoUsuario) {
-    int anio = 0;
-    boolean anioValido = false;
-
-    // Solicitar el año
-    while (!anioValido) {
-        String anioInput = JOptionPane.showInputDialog(null, "Ingrese el año al que pertenece el curso:");
-        if (anioInput == null) return; // Si el usuario cancela
-
-        try {
-            anio = Integer.parseInt(anioInput);
-            anioValido = true; // El año es válido
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "ERROR: Ingrese un año válido.");
-        }
-    }
-
-    // Solicitar el código del curso
-    String codigoCurso = JOptionPane.showInputDialog(null, "Ingrese el código del curso:");
-    if (codigoCurso == null) return; // Si el usuario cancela
-
-    // Obtener la carrera desde el CSV de usuarios
-    String carreraAbreviada = obtenerCarreraDesdeCSV(correoUsuario);
-    if (carreraAbreviada == null) {
-        JOptionPane.showMessageDialog(null, "No se pudo encontrar la carrera asociada a este usuario (._.)");
-        return;
-    }
-
-    // Crear el nombre de la carpeta concatenando
-    String nombreCarpeta = carreraAbreviada + "-" + anio + "-" + codigoCurso;
-    Path rutaCarpeta = Paths.get(carpetaBase, nombreCarpeta);
-
-    // Verificar si la carpeta existe
-    if (Files.exists(rutaCarpeta) && Files.isDirectory(rutaCarpeta)) {
-        JOptionPane.showMessageDialog(null, "Carpeta encontrada: " + rutaCarpeta.toString());
-
-        // Listar archivos aprobados
+    // Método para revisar archivos
+    public void revisarArchivo(String carreraAbreviada, int anio, String codigoCurso) {
         List<String> archivos = listarArchivos(carreraAbreviada, anio, codigoCurso);
 
         if (archivos.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No hay archivos aprobados para descargar en este curso (._.).");
-            return;
+            JOptionPane.showMessageDialog(null, "No hay archivos para revisar.");
+            return; // Salir del método si no hay archivos
         }
 
-        // Crear el JList con los archivos
-        JList<String> archivoList = new JList<>(archivos.toArray(new String[0]));
-        archivoList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        archivoList.setVisibleRowCount(5); // Mostrar hasta 5 archivos a la vez
-        JScrollPane scrollPane = new JScrollPane(archivoList);
-
-        // Crear un cuadro de diálogo con el JList
-        int option = JOptionPane.showConfirmDialog(null, scrollPane, "Seleccione el archivo a descargar",
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-        if (option == JOptionPane.CANCEL_OPTION) {
-            return; // Si el usuario cancela, no hace nada
-        }
-
-        String archivoSeleccionado = archivoList.getSelectedValue();
+        String archivoSeleccionado = (String) JOptionPane.showInputDialog(null,
+            "Seleccione el archivo que desea revisar", "Revisar archivo",
+            JOptionPane.PLAIN_MESSAGE, null, archivos.toArray(), archivos.get(0));
 
         if (archivoSeleccionado == null) {
-            JOptionPane.showMessageDialog(null, "No se ha seleccionado un archivo.");
+            return; // Salir del método si no se selecciona un archivo
+        }
+
+        String decision = JOptionPane.showInputDialog(null, "¿Desea aprobar o rechazar el archivo? (aprobar/rechazar):");
+        String nuevoEstado = "";
+
+        if (decision.equalsIgnoreCase("aprobar")) {
+            nuevoEstado = "Aprobado";
+        } else if (decision.equalsIgnoreCase("rechazar")) {
+            nuevoEstado = "Rechazado";
+        } else {
+            JOptionPane.showMessageDialog(null, "Decisión inválida.");
+            return; // Salir del método si la decisión es inválida
+        }
+
+        actualizarEstadoCSV(archivoSeleccionado, nuevoEstado);
+    }
+
+    // Método para actualizar el estado del csv para indicar si fue aprobado o denegado
+    private void actualizarEstadoCSV(String nombreArchivo, String nuevoEstado) {
+        String carpetaCSV = CARPETA_ARCHIVOS_CSV;
+        File archivoCSV = new File(carpetaCSV, ARCHIVO_APUNTES);
+        List<String> lineasActualizadas = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(archivoCSV))) {
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                String[] datos = linea.split(",");
+                if (datos[0].equals(nombreArchivo)) {
+                    datos[4] = nuevoEstado;
+                    linea = String.join(",", datos);
+                }
+                lineasActualizadas.add(linea);
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error al leer el archivo CSV: " + e.getMessage());
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivoCSV))) {
+            for (String linea : lineasActualizadas) {
+                writer.write(linea);
+                writer.newLine();
+            }
+            JOptionPane.showMessageDialog(null, "Estado actualizado a: " + nuevoEstado);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error al escribir en el archivo CSV: " + e.getMessage());
+        }
+    }
+
+    // Método para descargar archivo con JList para seleccionar archivo
+    public void descargarArchivo(String correoUsuario) {
+        int anio = 0;
+        boolean anioValido = false;
+
+        // Solicitar el año
+        while (!anioValido) {
+            String anioInput = JOptionPane.showInputDialog(null, "Ingrese el año al que pertenece el curso:");
+            if (anioInput == null) return; // Si el usuario cancela
+
+            try {
+                anio = Integer.parseInt(anioInput);
+                anioValido = true; // El año es válido
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "ERROR: Ingrese un año válido.");
+            }
+        }
+
+        // Solicitar el código del curso
+        String codigoCurso = JOptionPane.showInputDialog(null, "Ingrese el código del curso:");
+        if (codigoCurso == null) return; // Si el usuario cancela
+
+        // Obtener la carrera desde el CSV de usuarios
+        String carreraAbreviada = obtenerCarreraDesdeCSV(correoUsuario);
+        if (carreraAbreviada == null) {
+            JOptionPane.showMessageDialog(null, "No se pudo encontrar la carrera asociada a este usuario (._.)");
             return;
         }
 
-        // Ruta del archivo seleccionado
-        Path archivoRuta = rutaCarpeta.resolve(archivoSeleccionado);
+        // Crear el nombre de la carpeta concatenando
+        String nombreCarpeta = carreraAbreviada + "-" + anio + "-" + codigoCurso;
+        Path rutaCarpeta = Paths.get(carpetaBase, nombreCarpeta);
 
-        // Copiar archivo a la carpeta de descargas del sistema
-        Path carpetaDescargas = Paths.get(System.getProperty("user.home"), "Downloads");
-        Path destino = carpetaDescargas.resolve(archivoSeleccionado);
+        // Verificar si la carpeta existe
+        if (Files.exists(rutaCarpeta) && Files.isDirectory(rutaCarpeta)) {
+            JOptionPane.showMessageDialog(null, "Carpeta encontrada: " + rutaCarpeta.toString());
 
-        try {
-            Files.copy(archivoRuta, destino, StandardCopyOption.REPLACE_EXISTING);
-            // Cambiar la fecha de modificación al momento actual
-            Files.setLastModifiedTime(destino, FileTime.fromMillis(System.currentTimeMillis()));
+            // Listar archivos aprobados
+            List<String> archivos = listarArchivos(carreraAbreviada, anio, codigoCurso);
 
-            JOptionPane.showMessageDialog(null, "¡Apunte descargado correctamente!");
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error al descargar el archivo: " + e.getMessage());
+            if (archivos.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No hay archivos aprobados para descargar en este curso (._.).");
+                return;
+            }
+
+            // Crear el JList con los archivos
+            JList<String> archivoList = new JList<>(archivos.toArray(new String[0]));
+            archivoList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            archivoList.setVisibleRowCount(5); // Mostrar hasta 5 archivos a la vez
+            JScrollPane scrollPane = new JScrollPane(archivoList);
+
+            // Crear un cuadro de diálogo con el JList
+            int option = JOptionPane.showConfirmDialog(null, scrollPane, "Seleccione el archivo a descargar",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+            if (option == JOptionPane.CANCEL_OPTION) {
+                return; // Si el usuario cancela, no hace nada
+            }
+
+            String archivoSeleccionado = archivoList.getSelectedValue();
+
+            if (archivoSeleccionado == null) {
+                JOptionPane.showMessageDialog(null, "No se ha seleccionado un archivo.");
+                return;
+            }
+
+            // Ruta del archivo seleccionado
+            Path archivoRuta = rutaCarpeta.resolve(archivoSeleccionado);
+
+            // Copiar archivo a la carpeta de descargas del sistema
+            Path carpetaDescargas = Paths.get(System.getProperty("user.home"), "Downloads");
+            Path destino = carpetaDescargas.resolve(archivoSeleccionado);
+
+            try {
+                Files.copy(archivoRuta, destino, StandardCopyOption.REPLACE_EXISTING);
+                // Cambiar la fecha de modificación al momento actual
+                Files.setLastModifiedTime(destino, FileTime.fromMillis(System.currentTimeMillis()));
+
+                JOptionPane.showMessageDialog(null, "¡Apunte descargado correctamente!");
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "Error al descargar el archivo: " + e.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No se encontró la carpeta: " + rutaCarpeta.toString());
         }
-    } else {
-        JOptionPane.showMessageDialog(null, "No se encontró la carpeta: " + rutaCarpeta.toString());
     }
-}
 }
