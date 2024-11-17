@@ -15,69 +15,110 @@ public class InterfazLogin {
         initialize();
     }
 
-    private void initialize() {
+    private void initialize() { 
         frame = new JFrame("LOGIN");
-
+    
         // Cargar la imagen del icono
         try {
-            Image icon = ImageIO.read(new File("resources\\icon sin fondo.png")); 
+            Image icon = ImageIO.read(new File("resources\\icon_sin_fondo.png"));
             frame.setIconImage(icon);  
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+    
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(450, 300);
+        frame.setSize(510, 340);
         frame.setLocationRelativeTo(null); // Centrar la ventana en la pantalla
-        frame.getContentPane().setLayout(new BorderLayout());
+    
+        // Crear un panel con fondo
+        JPanel panelConFondo = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                try {
+                    // Cargar la imagen de fondo
+                    Image backgroundImage = ImageIO.read(new File("resources\\fondo_login.png")); // Ruta de tu imagen
+                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this); // Dibujar la imagen
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+    
+        panelConFondo.setLayout(new BoxLayout(panelConFondo, BoxLayout.Y_AXIS)); // Usar BoxLayout
+        frame.getContentPane().add(panelConFondo, BorderLayout.CENTER); // Añadir el panel con fondo al JFrame
+    
+        // Margen superior 
+        panelConFondo.add(Box.createVerticalStrut(145));
+    
+        Dimension btnSize = new Dimension(128, 30); // Definir tamaño común para los botones
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); // Cambié el layout para centrar los componentes verticalmente
-
-        panel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra el panel dentro del JFrame
-        frame.getContentPane().add(panel, BorderLayout.CENTER);
-
-        // Botón de Iniciar sesión
+        // Botón de Iniciar sesión con fondo
         JButton btnLogin = new JButton("Iniciar Sesión");
-        btnLogin.setPreferredSize(new Dimension(200, 40)); // Botón más pequeño
+        btnLogin.setPreferredSize(new Dimension(btnSize)); // Tamaño del botón
+        btnLogin.setMaximumSize(btnSize);
+        btnLogin.setMinimumSize(btnSize);
+        btnLogin.setBackground(new Color(114, 168, 63)); // Color de fondo 
+        btnLogin.setBorderPainted(false); // Sin borde
+        btnLogin.setForeground(Color.WHITE); // Color del texto
+        btnLogin.setFont(new Font("Helvetica", Font.BOLD, 14)); // Fuente en negrita
+        btnLogin.setFocusPainted(false); // Quitar borde de enfoque
+        btnLogin.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra el botón
+        btnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Cambia el cursor a mano al pasar por encima
         btnLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 mostrarFormularioLogin();
             }
         });
-        btnLogin.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra el botón
-        panel.add(btnLogin);
-
+        panelConFondo.add(btnLogin);
+    
         // Espacio entre los botones
-        panel.add(Box.createVerticalStrut(10));
-
-        // Botón de Registrarse
+        panelConFondo.add(Box.createVerticalStrut(5));
+    
+        // Botón de Registrarse con fondo
         JButton btnRegister = new JButton("Registrarse");
-        btnRegister.setPreferredSize(new Dimension(200, 40)); // Botón más pequeño
+        btnRegister.setPreferredSize(new Dimension(btnSize)); // Tamaño del botón
+        btnRegister.setMaximumSize(btnSize);
+        btnRegister.setMinimumSize(btnSize);
+        btnRegister.setBackground(new Color(114, 168, 63)); // Color de fondo 
+        btnRegister.setBorderPainted(false); // Sin borde
+        btnRegister.setForeground(Color.WHITE); // Color del texto
+        btnRegister.setFont(new Font("Helvetica", Font.BOLD, 14)); // Fuente en negrita
+        btnRegister.setFocusPainted(false); // Quitar borde de enfoque
+        btnRegister.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra el botón
+        btnRegister.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Cambia el cursor a mano al pasar por encima
         btnRegister.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 mostrarFormularioRegistro();
             }
         });
-        btnRegister.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra el botón
-        panel.add(btnRegister);
-
+        panelConFondo.add(btnRegister);
+    
         // Espacio entre los botones
-        panel.add(Box.createVerticalStrut(10));
-
-        // Botón de Salir
+        panelConFondo.add(Box.createVerticalStrut(8));
+    
+        // Botón de Salir sin fondo, pero con texto verde
         JButton btnExit = new JButton("Salir");
         btnExit.setPreferredSize(new Dimension(200, 40)); // Botón más pequeño
+        btnExit.setOpaque(false); // Hacer que el fondo sea transparente
+        btnExit.setContentAreaFilled(false); // El área de contenido sin relleno
+        btnExit.setBorderPainted(false); // Sin borde
+        btnExit.setForeground(new Color(114, 168, 63)); // Color del texto verde
+        btnExit.setFont(new Font("Helvetica", Font.BOLD, 14)); // Fuente en negrita
+        btnExit.setFocusPainted(false); // Quitar borde de enfoque
+        btnExit.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra el botón
+        btnExit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Cambia el cursor a mano al pasar por encima
         btnExit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.exit(0); // Cerrar la aplicación
             }
         });
-        btnExit.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra el botón
-        panel.add(btnExit);
-
+        panelConFondo.add(btnExit);
+    
         frame.setVisible(true);
     }
+    
+    
 
     private void mostrarFormularioLogin() {
         JPanel loginPanel = new JPanel(new GridLayout(3, 2, 10, 10));
@@ -109,6 +150,7 @@ public class InterfazLogin {
                 JOptionPane.showMessageDialog(frame, "Error al intentar iniciar sesión.");
             }
         }
+
     }
 
     private void mostrarFormularioRegistro() {
