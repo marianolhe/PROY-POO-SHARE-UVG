@@ -1,7 +1,9 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 
 public class InterfazLogin {
@@ -14,30 +16,65 @@ public class InterfazLogin {
     }
 
     private void initialize() {
-        frame = new JFrame("Login");
-        frame.setBounds(100, 100, 450, 300);
+        frame = new JFrame("LOGIN");
+
+        // Cargar la imagen del icono
+        try {
+            Image icon = ImageIO.read(new File("resources\\icon sin fondo.png")); 
+            frame.setIconImage(icon);  
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(450, 300);
+        frame.setLocationRelativeTo(null); // Centrar la ventana en la pantalla
         frame.getContentPane().setLayout(new BorderLayout());
 
         JPanel panel = new JPanel();
-        frame.getContentPane().add(panel, BorderLayout.CENTER);
-        panel.setLayout(new GridLayout(3, 1, 10, 10));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); // Cambié el layout para centrar los componentes verticalmente
 
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra el panel dentro del JFrame
+        frame.getContentPane().add(panel, BorderLayout.CENTER);
+
+        // Botón de Iniciar sesión
         JButton btnLogin = new JButton("Iniciar Sesión");
+        btnLogin.setPreferredSize(new Dimension(200, 40)); // Botón más pequeño
         btnLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 mostrarFormularioLogin();
             }
         });
+        btnLogin.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra el botón
         panel.add(btnLogin);
 
+        // Espacio entre los botones
+        panel.add(Box.createVerticalStrut(10));
+
+        // Botón de Registrarse
         JButton btnRegister = new JButton("Registrarse");
+        btnRegister.setPreferredSize(new Dimension(200, 40)); // Botón más pequeño
         btnRegister.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 mostrarFormularioRegistro();
             }
         });
+        btnRegister.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra el botón
         panel.add(btnRegister);
+
+        // Espacio entre los botones
+        panel.add(Box.createVerticalStrut(10));
+
+        // Botón de Salir
+        JButton btnExit = new JButton("Salir");
+        btnExit.setPreferredSize(new Dimension(200, 40)); // Botón más pequeño
+        btnExit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0); // Cerrar la aplicación
+            }
+        });
+        btnExit.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra el botón
+        panel.add(btnExit);
 
         frame.setVisible(true);
     }
