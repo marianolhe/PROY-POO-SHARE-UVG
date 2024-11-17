@@ -291,14 +291,16 @@ private void actualizarEstadoCSV(String nombreArchivo, String nuevoEstado) {
     }
 }
 
-// Método para descargar archivo
+// Método para descargar archivo con JList para seleccionar archivo
 public void descargarArchivo(String correoUsuario) {
     int anio = 0;
     boolean anioValido = false;
 
     // Solicitar el año
     while (!anioValido) {
-        String anioInput = JOptionPane.showInputDialog(null, "Ingrese el año al que pertenece el curso: ");
+        String anioInput = JOptionPane.showInputDialog(null, "Ingrese el año al que pertenece el curso:");
+        if (anioInput == null) return; // Si el usuario cancela
+
         try {
             anio = Integer.parseInt(anioInput);
             anioValido = true; // El año es válido
@@ -308,40 +310,65 @@ public void descargarArchivo(String correoUsuario) {
     }
 
     // Solicitar el código del curso
-    String codigoCurso = JOptionPane.showInputDialog(null, "Ingrese el código del curso: ");
-    String carreraAbreviada = obtenerCarreraDesdeCSV(correoUsuario);
+    String codigoCurso = JOptionPane.showInputDialog(null, "Ingrese el código del curso:");
+    if (codigoCurso == null) return; // Si el usuario cancela
 
+    // Obtener la carrera desde el CSV de usuarios
+    String carreraAbreviada = obtenerCarreraDesdeCSV(correoUsuario);
     if (carreraAbreviada == null) {
-        JOptionPane.showMessageDialog(null, "No se pudo encontrar la carrera asociada a este usuario.");
+        JOptionPane.showMessageDialog(null, "No se pudo encontrar la carrera asociada a este usuario (._.)");
         return;
     }
 
+    // Crear el nombre de la carpeta concatenando
     String nombreCarpeta = carreraAbreviada + "-" + anio + "-" + codigoCurso;
     Path rutaCarpeta = Paths.get(carpetaBase, nombreCarpeta);
 
+    // Verificar si la carpeta existe
     if (Files.exists(rutaCarpeta) && Files.isDirectory(rutaCarpeta)) {
+        JOptionPane.showMessageDialog(null, "Carpeta encontrada: " + rutaCarpeta.toString());
+
+        // Listar archivos aprobados
         List<String> archivos = listarArchivos(carreraAbreviada, anio, codigoCurso);
 
         if (archivos.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No hay archivos aprobados para descargar en este curso.");
+            JOptionPane.showMessageDialog(null, "No hay archivos aprobados para descargar en este curso (._.).");
             return;
         }
 
-        String archivoSeleccionado = (String) JOptionPane.showInputDialog(null, 
-            "Seleccione el archivo que desea descargar", "Descargar archivo",
-            JOptionPane.PLAIN_MESSAGE, null, archivos.toArray(), archivos.get(0));
+        // Crear el JList con los archivos
+        JList<String> archivoList = new JList<>(archivos.toArray(new String[0]));
+        archivoList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        archivoList.setVisibleRowCount(5); // Mostrar hasta 5 archivos a la vez
+        JScrollPane scrollPane = new JScrollPane(archivoList);
 
-        if (archivoSeleccionado == null) {
-            return; // Salir del método si no se selecciona un archivo
+        // Crear un cuadro de diálogo con el JList
+        int option = JOptionPane.showConfirmDialog(null, scrollPane, "Seleccione el archivo a descargar",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (option == JOptionPane.CANCEL_OPTION) {
+            return; // Si el usuario cancela, no hace nada
         }
 
+        String archivoSeleccionado = archivoList.getSelectedValue();
+
+        if (archivoSeleccionado == null) {
+            JOptionPane.showMessageDialog(null, "No se ha seleccionado un archivo.");
+            return;
+        }
+
+        // Ruta del archivo seleccionado
         Path archivoRuta = rutaCarpeta.resolve(archivoSeleccionado);
+
+        // Copiar archivo a la carpeta de descargas del sistema
         Path carpetaDescargas = Paths.get(System.getProperty("user.home"), "Downloads");
         Path destino = carpetaDescargas.resolve(archivoSeleccionado);
 
         try {
             Files.copy(archivoRuta, destino, StandardCopyOption.REPLACE_EXISTING);
+            // Cambiar la fecha de modificación al momento actual
             Files.setLastModifiedTime(destino, FileTime.fromMillis(System.currentTimeMillis()));
+
             JOptionPane.showMessageDialog(null, "¡Apunte descargado correctamente!");
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error al descargar el archivo: " + e.getMessage());
