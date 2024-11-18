@@ -287,9 +287,12 @@ public class GestionPDF {
             List<String> archivos = listarArchivos(carreraAbreviada, anio, codigoCurso);
 
             if (archivos.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "No hay archivos aprobados para descargar en este curso (._.).");
+                
+                JOptionPane.showMessageDialog(null, "No hay archivos aprobados para descargar en este curso (._.).", 
+                                                "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            
 
             // Crear el JList con los archivos
             JList<String> archivoList = new JList<>(archivos.toArray(new String[0]));
