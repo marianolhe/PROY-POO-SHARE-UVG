@@ -12,7 +12,7 @@ public class Main {
 
         while (continuar) {
             System.out.println("\n+ =============================================== +");
-            System.out.println("                      MENÚ                       ");
+            System.out.println("                      MENÚ    PRUEBA                   ");
             System.out.println("+ =============================================== +");
             System.out.printf("| %-5s | %-40s |\n", "1", "Registrarse");
             System.out.printf("| %-5s | %-40s |\n", "2", "Iniciar sesión");
