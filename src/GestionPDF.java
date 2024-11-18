@@ -254,7 +254,7 @@ public class GestionPDF {
 
         // Solicitar el año
         while (!anioValido) {
-            String anioInput = JOptionPane.showInputDialog(null, "Ingrese el año al que pertenece el curso:");
+            String anioInput = JOptionPane.showInputDialog(null, "Ingrese el año al que pertenece el curso (ej. 1):");
             if (anioInput == null) return; // Si el usuario cancela
 
             try {
@@ -266,7 +266,7 @@ public class GestionPDF {
         }
 
         // Solicitar el código del curso
-        String codigoCurso = JOptionPane.showInputDialog(null, "Ingrese el código del curso:");
+        String codigoCurso = JOptionPane.showInputDialog(null, "Ingrese el código del curso (ej. CC2005):");
         if (codigoCurso == null) return; // Si el usuario cancela
 
         // Obtener la carrera desde el CSV de usuarios
@@ -282,7 +282,6 @@ public class GestionPDF {
 
         // Verificar si la carpeta existe
         if (Files.exists(rutaCarpeta) && Files.isDirectory(rutaCarpeta)) {
-            JOptionPane.showMessageDialog(null, "Carpeta encontrada: " + rutaCarpeta.toString());
 
             // Listar archivos aprobados
             List<String> archivos = listarArchivos(carreraAbreviada, anio, codigoCurso);
