@@ -1,9 +1,12 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
-public class GestionHorasBeca {
+public class GestionHorasBecaGUI {
 
     // Clase interna para representar a un Estudiante
     public static class Estudiante {
@@ -11,14 +14,12 @@ public class GestionHorasBeca {
         private String id;
         private int horasBeca;
 
-        // Constructor
         public Estudiante(String nombre, String id, int horasBeca) {
             this.nombre = nombre;
             this.id = id;
             this.horasBeca = horasBeca;
         }
 
-        // Getters y Setters
         public String getNombre() {
             return nombre;
         }
@@ -35,12 +36,9 @@ public class GestionHorasBeca {
             this.horasBeca = horasBeca;
         }
 
-        // Método para agregar horas de beca
         public void agregarHorasBeca(int horas) {
             if (horas >= 0) {
                 this.horasBeca += horas;
-            } else {
-                System.out.println("No se pueden agregar horas negativas.");
             }
         }
 
@@ -50,24 +48,16 @@ public class GestionHorasBeca {
         }
     }
 
-    // Clase para la gestión de estudiantes
     public static class GestionEstudiantes {
         private List<Estudiante> estudiantes;
+        private final String archivoCSV = "archivos_csv/estudiantes.csv";
 
-        private final String archivoCSV = "archivos_csv/estudiantes.csv"; 
-
-        // Constructor
         public GestionEstudiantes() {
             this.estudiantes = new ArrayList<>();
             cargarEstudiantes();
         }
 
-        // Método para cargar estudiantes desde el archivo CSV
         public void cargarEstudiantes() {
-            // Código de depuración para verificar el directorio actual y la ruta del archivo
-            System.out.println("Directorio actual: " + new File(".").getAbsolutePath());
-            System.out.println("Intentando abrir archivo en la ruta: " + archivoCSV);
-
             try (BufferedReader br = new BufferedReader(new FileReader(archivoCSV))) {
                 String linea;
                 while ((linea = br.readLine()) != null) {
@@ -77,27 +67,21 @@ public class GestionHorasBeca {
                     int horasBeca = Integer.parseInt(datos[2]);
                     estudiantes.add(new Estudiante(nombre, id, horasBeca));
                 }
-                System.out.println("Archivo leído exitosamente.");
-            } catch (FileNotFoundException e) {
-                System.out.println("Error: El archivo no se encontró en la ruta especificada.");
             } catch (IOException e) {
-                System.out.println("Error al leer el archivo CSV: " + e.getMessage());
+                JOptionPane.showMessageDialog(null, "Error al cargar el archivo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
 
-        // Método para guardar estudiantes en el archivo CSV
         public void guardarEstudiantes() {
             try (PrintWriter pw = new PrintWriter(new FileWriter(archivoCSV))) {
                 for (Estudiante estudiante : estudiantes) {
                     pw.println(estudiante.toString());
                 }
-                System.out.println("Datos guardados correctamente en el archivo.");
             } catch (IOException e) {
-                System.out.println("Error al guardar en el archivo CSV: " + e.getMessage());
+                JOptionPane.showMessageDialog(null, "Error al guardar en el archivo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
 
-        // Método para buscar estudiante por ID
         public Estudiante buscarEstudiantePorID(String id) {
             for (Estudiante estudiante : estudiantes) {
                 if (estudiante.getId().equals(id)) {
@@ -107,51 +91,63 @@ public class GestionHorasBeca {
             return null;
         }
 
-        // Método para agregar horas a un estudiante específico
         public void agregarHorasEstudiante(String id, int horas) {
             Estudiante estudiante = buscarEstudiantePorID(id);
             if (estudiante != null) {
                 estudiante.agregarHorasBeca(horas);
-                guardarEstudiantes();  // Actualizar el archivo CSV con los nuevos datos
-                System.out.println("Horas de beca actualizadas para " + estudiante.getNombre());
+                guardarEstudiantes();
+                JOptionPane.showMessageDialog(null, "Horas agregadas correctamente para " + estudiante.getNombre());
             } else {
-                System.out.println("Estudiante no encontrado.");
+                JOptionPane.showMessageDialog(null, "Estudiante no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
-}
 
-    // Menú principal
     public static void main(String[] args) {
         GestionEstudiantes gestion = new GestionEstudiantes();
-        Scanner scanner = new Scanner(System.in);
 
-        int opcion;
-        do {
-            System.out.println("Menú Principal:");
-            System.out.println("1. Agregar horas de beca");
-            System.out.println("0. Salir");
-            System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
-            scanner.nextLine();
+        // Crear la ventana principal
+        JFrame frame = new JFrame("Gestión de Horas de Beca");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
 
-            switch (opcion) {
-                case 1:
-                    System.out.print("Ingrese el ID del estudiante: ");
-                    String id = scanner.nextLine();
-                    System.out.print("Ingrese las horas de beca a añadir: ");
-                    int horas = scanner.nextInt();
+        // Panel principal
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(4, 1, 10, 10));
+
+        // Componentes
+        JLabel lblId = new JLabel("ID del estudiante:");
+        JTextField txtId = new JTextField();
+        JLabel lblHoras = new JLabel("Horas a añadir:");
+        JTextField txtHoras = new JTextField();
+        JButton btnAgregarHoras = new JButton("Agregar Horas");
+
+        // Acción al presionar el botón
+        btnAgregarHoras.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String id = txtId.getText();
+                String horasStr = txtHoras.getText();
+
+                try {
+                    int horas = Integer.parseInt(horasStr);
                     gestion.agregarHorasEstudiante(id, horas);
-                    break;
-                case 0:
-                    System.out.println("Saliendo del programa.");
-                    break;
-                default:
-                    System.out.println("Opción inválida.");
-                    break;
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(frame, "Por favor, ingrese un número válido para las horas.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-        } while (opcion != 0);
+        });
 
-        scanner.close();
+        // Añadir componentes al panel
+        panel.add(lblId);
+        panel.add(txtId);
+        panel.add(lblHoras);
+        panel.add(txtHoras);
+        panel.add(btnAgregarHoras);
+
+        // Configurar y mostrar la ventana
+        frame.getContentPane().add(panel);
+        frame.setVisible(true);
     }
 }
+
