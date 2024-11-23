@@ -122,36 +122,92 @@ public class InterfazLogin {
 
     private void mostrarFormularioLogin() {
         JPanel loginPanel = new JPanel(new GridLayout(3, 2, 10, 10));
-
+    
         JTextField correoField = new JTextField();
         JPasswordField passwordField = new JPasswordField();
-
+    
         loginPanel.add(new JLabel("Correo:"));
         loginPanel.add(correoField);
         loginPanel.add(new JLabel("Contraseña:"));
         loginPanel.add(passwordField);
-
-        int result = JOptionPane.showConfirmDialog(frame, loginPanel, "Iniciar Sesión", JOptionPane.OK_CANCEL_OPTION);
-        if (result == JOptionPane.OK_OPTION) {
-            String correo = correoField.getText();
-            String contrasena = new String(passwordField.getPassword());
-
-            try {
-                PersonaPlantilla usuario = gestionLogin.iniciarSesion(correo, contrasena);
-                if (usuario != null) {
-                    JOptionPane.showMessageDialog(frame, "¡Inicio de sesión exitoso!");
-                    frame.setVisible(false); // Ocultar la ventana de inicio de sesión
-                    gestionLogin.mostrarMenuPorRol(usuario);
-                    frame.setVisible(true); // Mostrar nuevamente la ventana de inicio de sesión
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Correo o contraseña incorrectos.");
+    
+        // Crear los botones "Entrar" y "Regresar"
+        JButton btnEntrar = new JButton("Entrar");
+        JButton btnRegresar = new JButton("Regresar");
+    
+        // Configurar el botón "Entrar"
+        /* Dimension btnSize = new Dimension(100, 30);  // Ajusta el tamaño a tus necesidades
+        btnEntrar.setPreferredSize(btnSize);
+        btnEntrar.setMaximumSize(btnSize);
+        btnEntrar.setMinimumSize(btnSize);
+        btnEntrar.setBackground(new Color(114, 168, 63)); // Color de fondo
+        btnEntrar.setForeground(Color.WHITE);  // Color del texto
+        btnEntrar.setFont(new Font("Helvetica", Font.BOLD, 14)); // Fuente en negrita
+        btnEntrar.setBorderPainted(false);  // Sin borde
+        btnEntrar.setFocusPainted(false);  // Quitar borde de enfoque
+        btnEntrar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnEntrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); */
+        btnEntrar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String correo = correoField.getText();
+                String contrasena = new String(passwordField.getPassword());
+    
+                try {
+                    PersonaPlantilla usuario = gestionLogin.iniciarSesion(correo, contrasena);
+                    if (usuario != null) {
+                        JOptionPane.showMessageDialog(frame, "¡Inicio de sesión exitoso!");
+                        frame.setVisible(false); // Ocultar la ventana de inicio de sesión
+                        gestionLogin.mostrarMenuPorRol(usuario);
+                        frame.setVisible(true); // Mostrar nuevamente la ventana de inicio de sesión
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Correo o contraseña incorrectos.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (IOException e1) {
+                    JOptionPane.showMessageDialog(frame, "Error al intentar iniciar sesión.");
                 }
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(frame, "Error al intentar iniciar sesión.");
-            }
-        }
 
+                // Limpiar los campos de texto y contraseña después de intentar iniciar sesión
+                correoField.setText("");  
+                passwordField.setText("");
+
+            }
+        });
+    
+         // Configurar el botón "Regresar" para cerrar el cuadro de diálogo
+         /*btnRegresar.setPreferredSize(new Dimension(100, 30)); // Botón más pequeño
+         btnRegresar.setOpaque(false); // Hacer que el fondo sea transparente
+         btnRegresar.setContentAreaFilled(false); // El área de contenido sin relleno
+         btnRegresar.setBorderPainted(false); // Sin borde
+         btnRegresar.setForeground(new Color(114, 168, 63)); // Color del texto verde
+         btnRegresar.setFont(new Font("Helvetica", Font.BOLD, 14)); // Fuente en negrita
+         btnRegresar.setFocusPainted(false); // Quitar borde de enfoque
+         btnRegresar.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra el botón
+         btnRegresar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Cambia el cursor a mano al pasar por encima */
+        btnRegresar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Cerrar el cuadro de diálogo (como lo hacía el botón "Cancelar")
+                SwingUtilities.getWindowAncestor(loginPanel).dispose(); // Cerrar el cuadro de diálogo
+            }
+        });
+    
+        // Crear un panel para contener los botones "Entrar" y "Regresar"
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(btnEntrar);
+        buttonPanel.add(btnRegresar);
+
+        // Usar showOptionDialog sin icono
+        JOptionPane.showOptionDialog(
+            frame,
+            loginPanel,  // El panel de inicio de sesión
+            "INICIAR SESIÓN", // Título de la ventana
+            JOptionPane.DEFAULT_OPTION,  // Sin opciones predeterminadas como "Sí/No"
+            JOptionPane.PLAIN_MESSAGE,  // Tipo de mensaje sin icono
+            null,  // Sin icono
+            new Object[] { buttonPanel },  // Usar el panel con los botones
+            null  // Sin botón por defecto
+        );
     }
+    
 
     private void mostrarFormularioRegistro() {
         JPanel registerPanel = new JPanel(new GridLayout(6, 2, 10, 10));
@@ -195,7 +251,7 @@ public class InterfazLogin {
                     JOptionPane.showMessageDialog(frame, "Error al intentar registrar el usuario.");
                 }
             } else {
-                JOptionPane.showMessageDialog(frame, "Correo o contraseña no cumplen con los requisitos.");
+                JOptionPane.showMessageDialog(frame, "Correo o contraseña no cumplen con los requisitos.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

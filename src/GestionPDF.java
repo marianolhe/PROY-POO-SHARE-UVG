@@ -1,3 +1,5 @@
+import java.awt.BorderLayout;
+import java.awt.Font;
 import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.FileTime;
@@ -29,10 +31,11 @@ public class GestionPDF {
         }
 
         String rutaArchivo = fileChooser.getSelectedFile().getAbsolutePath();
-        String codigoCurso = JOptionPane.showInputDialog("Ingrese el código del curso (ej. CC2019):");
+        
+        String codigoCurso = JOptionPane.showInputDialog(null, "Ingrese el código del curso (ej. CC2019):", "Código del curso", JOptionPane.PLAIN_MESSAGE);  // Sin ícono
         if (codigoCurso == null || codigoCurso.isBlank()) return;
 
-        String anio = JOptionPane.showInputDialog("Ingrese el año del curso (ej. 3):");
+        String anio = JOptionPane.showInputDialog(null, "Ingrese el año del curso (ej. 3):", "Año del curso", JOptionPane.PLAIN_MESSAGE);  // Sin ícono
         if (anio == null || anio.isBlank()) return;
 
         subirArchivo(rutaArchivo, codigoCurso, correoUsuario, anio);
@@ -247,92 +250,103 @@ public class GestionPDF {
         }
     }
 
-    // Método para descargar archivo con JList para seleccionar archivo
     public void descargarArchivo(String correoUsuario) {
         int anio = 0;
         boolean anioValido = false;
-
+    
         // Solicitar el año
         while (!anioValido) {
-            String anioInput = JOptionPane.showInputDialog(null, "Ingrese el año al que pertenece el curso (ej. 1):");
+            String anioInput = JOptionPane.showInputDialog(null, "Ingrese el año al que pertenece el curso (ej. 1):", "Año del Curso", JOptionPane.PLAIN_MESSAGE);  // Sin ícono
             if (anioInput == null) return; // Si el usuario cancela
-
+    
             try {
                 anio = Integer.parseInt(anioInput);
                 anioValido = true; // El año es válido
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "ERROR: Ingrese un año válido.");
+                JOptionPane.showMessageDialog(null, "ERROR: Ingrese un año válido.", "Error", JOptionPane.ERROR_MESSAGE);  // Con ícono de error
             }
         }
-
+    
         // Solicitar el código del curso
-        String codigoCurso = JOptionPane.showInputDialog(null, "Ingrese el código del curso (ej. CC2005):");
+        String codigoCurso = JOptionPane.showInputDialog(null, "Ingrese el código del curso (ej. CC2005):", "Código del Curso", JOptionPane.PLAIN_MESSAGE);  // Sin ícono
         if (codigoCurso == null) return; // Si el usuario cancela
-
+    
         // Obtener la carrera desde el CSV de usuarios
         String carreraAbreviada = obtenerCarreraDesdeCSV(correoUsuario);
         if (carreraAbreviada == null) {
-            JOptionPane.showMessageDialog(null, "No se pudo encontrar la carrera asociada a este usuario (._.)");
+            JOptionPane.showMessageDialog(null, "No se pudo encontrar la carrera asociada a este usuario (._.)", "Error", JOptionPane.ERROR_MESSAGE);  // Con ícono de error
             return;
         }
-
+    
         // Crear el nombre de la carpeta concatenando
         String nombreCarpeta = carreraAbreviada + "-" + anio + "-" + codigoCurso;
         Path rutaCarpeta = Paths.get(carpetaBase, nombreCarpeta);
-
+    
         // Verificar si la carpeta existe
         if (Files.exists(rutaCarpeta) && Files.isDirectory(rutaCarpeta)) {
-
+    
             // Listar archivos aprobados
             List<String> archivos = listarArchivos(carreraAbreviada, anio, codigoCurso);
-
+    
             if (archivos.isEmpty()) {
-                
-                JOptionPane.showMessageDialog(null, "No hay archivos aprobados para descargar en este curso (._.).", 
-                                                "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "No hay archivos aprobados para descargar en este curso.", "Error", JOptionPane.ERROR_MESSAGE);  // Con ícono de error
                 return;
             }
-            
-
+    
             // Crear el JList con los archivos
             JList<String> archivoList = new JList<>(archivos.toArray(new String[0]));
             archivoList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            archivoList.setVisibleRowCount(5); // Mostrar hasta 5 archivos a la vez
+            archivoList.setVisibleRowCount(4); // Mostrar hasta 5 archivos a la vez
             JScrollPane scrollPane = new JScrollPane(archivoList);
+    
+            // Crear el JLabel para mostrar el mensaje
+            JLabel label = new JLabel("Seleccione el apunte a descargar:");
+            label.setFont(new Font("Helvetica", Font.PLAIN, 12));  
 
-            // Crear un cuadro de diálogo con el JList
-            int option = JOptionPane.showConfirmDialog(null, scrollPane, "Seleccione el archivo a descargar",
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+    
+            // Agregar un margen de 15 píxeles alrededor del JLabel
+            label.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0)); 
 
-            if (option == JOptionPane.CANCEL_OPTION) {
+            // Crear un panel que contenga el JLabel y el JScrollPane
+            JPanel panel = new JPanel();
+            panel.setLayout(new BorderLayout());
+            panel.add(label, BorderLayout.NORTH);
+            panel.add(scrollPane, BorderLayout.CENTER);
+    
+            // Crear un cuadro de diálogo con el JList y cambiar los textos de los botones
+            Object[] options = {"Descargar", "Cancelar"};
+            int option = JOptionPane.showOptionDialog(null, panel, "Descargar Apunte",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);  // Botones personalizados
+    
+            if (option == 1) {
                 return; // Si el usuario cancela, no hace nada
             }
-
+    
             String archivoSeleccionado = archivoList.getSelectedValue();
-
+    
             if (archivoSeleccionado == null) {
-                JOptionPane.showMessageDialog(null, "No se ha seleccionado un archivo.");
+                JOptionPane.showMessageDialog(null, "No se ha seleccionado un archivo.", "Error", JOptionPane.ERROR_MESSAGE);  // Con ícono de error
                 return;
             }
-
+    
             // Ruta del archivo seleccionado
             Path archivoRuta = rutaCarpeta.resolve(archivoSeleccionado);
-
+    
             // Copiar archivo a la carpeta de descargas del sistema
             Path carpetaDescargas = Paths.get(System.getProperty("user.home"), "Downloads");
             Path destino = carpetaDescargas.resolve(archivoSeleccionado);
-
+    
             try {
                 Files.copy(archivoRuta, destino, StandardCopyOption.REPLACE_EXISTING);
                 // Cambiar la fecha de modificación al momento actual
                 Files.setLastModifiedTime(destino, FileTime.fromMillis(System.currentTimeMillis()));
-
-                JOptionPane.showMessageDialog(null, "¡Apunte descargado correctamente!");
+    
+                JOptionPane.showMessageDialog(null, "¡Apunte descargado correctamente!", "Apunte descargado", JOptionPane.INFORMATION_MESSAGE);  // Sin ícono
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Error al descargar el archivo: " + e.getMessage());
+                JOptionPane.showMessageDialog(null, "Error al descargar el archivo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);  // Con ícono de error
             }
         } else {
-            JOptionPane.showMessageDialog(null, "No se encontró la carpeta: " + rutaCarpeta.toString());
+            JOptionPane.showMessageDialog(null, "No se encontró el curso del código especificado.", "Error", JOptionPane.ERROR_MESSAGE);  // Con ícono de error
         }
-    }
+    }    
 }

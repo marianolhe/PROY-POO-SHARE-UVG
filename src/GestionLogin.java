@@ -101,7 +101,7 @@ public class GestionLogin {
                     null,
                     "Seleccione una opción",
                     titulo,
-                    JOptionPane.QUESTION_MESSAGE,
+                    JOptionPane.PLAIN_MESSAGE,
                     null,
                     opciones,
                     opciones[0]);
